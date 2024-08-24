@@ -376,31 +376,38 @@ img {
     z-index: 10;
 }
 
-.home__social{
-    height: max-content;
-    position: absolute;
-    left: -3rem;
-    top: 0;
-    bottom: 0;
-    margin: auto 0;
-    display: grid;
-    row-gap: 1rem;
+.home__social {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2rem;
 }
 
-.home__social-link{
+.home__social-link {
     background-color: var(--black-color);
     color: var(--white-color);
     font-size: 1.25rem;
-    padding: 6px;
+    padding: 10px;
     display: grid;
     place-items: center;
-    transition: background-color .3s;
+    transition: background-color .3s, transform .3s;
+    border-radius: 50%;
 }
 
-.home__social-link:hover{
+.home__social-link:hover {
     background-color: var(--first-color);
+    transform: translateY(-5px);
 }
 
+@media screen and (min-width: 768px) {
+    .home__social {
+        position: absolute;
+        left: 2rem;
+        top: 50%;
+        transform: translateY(-50%);
+        flex-direction: column;
+    }
+}
 
 .home__info{
     margin-top: 4rem;
@@ -516,57 +523,100 @@ img {
  /* Add some basic styling, you can customize it further */
  .skills {
     padding: 40px 0;
-    background-color: #f4f4f4;
+    background: linear-gradient(135deg, #f4f4f4, #e2e2e2);
   }
-
+  
   .skills__title {
     font-size: 35px;
     margin-bottom: 20px;
     text-align: center;
-  }
-
-  .skills__container {
-    display: flex;
-    justify-content: space-between;
-  }
-
-  .skills__list {
-    width: 48%; /* Adjust the width as needed */
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .skill {
-    margin-bottom: 10px;
+    font-weight: bold;
     opacity: 0;
     transform: translateY(20px);
-    transition: opacity 1s ease-in-out, transform 1s ease-in-out;
+    animation: fadeInUp 1s ease-in-out forwards;
   }
-
-  .skill__label {
+  
+  .skills__container {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    text-align: left;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 1s ease-in-out forwards;
+    animation-delay: 0.5s;
+  }
+  
+  .skills__list {
+    width: 48%;
+    list-style: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+  }
+  
+  .skill__label {
+    margin-bottom: 10px;
+  }
+  
+  .skill__label strong {
+    display: block;
     margin-bottom: 5px;
+    font-weight: bold;
   }
-
-  .skill__name {
-    flex-grow: 1;
+  
+  .skill__percentage {
+    color: #666;
   }
-
+  
   .skill__bar {
     height: 10px;
     background-color: #ddd;
     position: relative;
     overflow: hidden;
+    border-radius: 5px;
+    margin-top: 5px;
   }
-
+  
   .skill__progress {
     height: 100%;
     background-color: #f97c00;
     width: 0;
-    transition: width 1s ease-in-out;
+    transition: width 1.5s ease-in-out;
   }
+  
+  .skill:hover .skill__progress {
+    background-color: #e67a00;
+    transition: background-color 0.5s;
+  }
+  
+  /* Keyframes for the animation */
+  @keyframes fadeInUp {
+    0% {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Reveal animation for progress bars */
+  .skills.active .skill__progress--python {
+    width: 90%;
+  }
+  
+  .skills.active .skill__progress--aiml {
+    width: 70%;
+  }
+  
+  .skills.active .skill__progress--frameworks {
+    width: 75%;
+  }
+  
+  .skills.active .skill__progress--genai {
+    width: 95%;
+  }  
 /*==========SERVICES========*/
 .services__container{
     grid-template-columns: 250px;
@@ -629,7 +679,70 @@ img {
     margin-bottom: 1.25rem;
 }
 
+/*===================INTERNSHIPS & TRAININGS==================*/
 
+.experience {
+    padding: 80px 0;
+}
+
+.experience__container {
+    display: grid;
+    gap: 2rem;
+}
+
+.experience__item {
+    background-color: var(--container-color);
+    padding: 2rem;
+    border-radius: 0.5rem;
+    transition: background-color .4s, transform .3s, box-shadow .3s;
+    border: 2px solid transparent;
+}
+
+.experience__item:hover {
+    background-color: var(--white-color);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    border-color: var(--first-color);
+}
+
+.experience__position {
+    font-size: var(--h3-font-size);
+    font-weight: var(--font-semi-bold);
+    margin-bottom: 0.5rem;
+    color: var(--title-color);
+    transition: color .3s;
+}
+
+.experience__item:hover .experience__position {
+    color: var(--first-color);
+}
+
+.experience__company, .experience__date {
+    display: block;
+    font-size: var(--small-font-size);
+    color: var(--text-color-light);
+}
+
+.experience__description {
+    margin-top: 1rem;
+    color: var(--text-color);
+}
+
+.experience__description li {
+    margin-bottom: 0.5rem;
+}
+
+@media screen and (min-width: 768px) {
+    .experience__container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .experience__container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
 /*===================Projects==================*/
 .projects{
     background-color: var(--container-color);
