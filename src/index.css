@@ -1,0 +1,222 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  body {
+    @apply bg-surface text-gray-900 font-sans antialiased;
+    overflow-x: hidden;
+  }
+
+  * {
+    letter-spacing: 0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Better touch targets on mobile */
+  @media (max-width: 640px) {
+    a, button, input, textarea, select {
+      min-height: 44px;
+    }
+  }
+
+  ::selection {
+    @apply bg-accent/20 text-accent;
+  }
+}
+
+@layer utilities {
+  .text-gradient {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(90deg, #2563eb, #dc2626, #d97706, #16a34a, #2563eb);
+    background-size: 220% 100%;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-xl border border-surface-border shadow-sm;
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 34px -14px rgba(37, 99, 235, 0.25);
+  }
+
+  .google-accent-sweep {
+    background-image: linear-gradient(90deg, #2563eb, #dc2626, #d97706, #16a34a, #2563eb);
+    background-size: 240% 100%;
+    animation: google-sweep 8s ease-in-out infinite;
+  }
+
+  .section-reveal-line {
+    transform-origin: left;
+    background-image: linear-gradient(90deg, #2563eb, #dc2626, #d97706, #16a34a);
+  }
+
+  .hero-role-text {
+    transition: color 320ms ease, text-shadow 320ms ease;
+  }
+
+  .hero-role-blue {
+    color: #1d4ed8;
+    text-shadow: 0 0 22px rgba(29, 78, 216, 0.12);
+  }
+
+  .hero-role-green {
+    color: #15803d;
+    text-shadow: 0 0 22px rgba(21, 128, 61, 0.10);
+  }
+
+  .hero-role-yellow {
+    color: #b45309;
+    text-shadow: 0 0 22px rgba(180, 83, 9, 0.10);
+  }
+
+  .typing-caret {
+    width: 2px;
+    height: 1.05em;
+    border-radius: 999px;
+    background: currentColor;
+    animation: caret-blink 0.9s steps(1) infinite;
+  }
+
+  @keyframes caret-blink {
+    50% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes google-sweep {
+    0%,
+    100% {
+      background-position: 0% 50%;
+    }
+
+    50% {
+      background-position: 100% 50%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      scroll-behavior: auto !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  /* ── Scan-line overlay ─────────────────────────── */
+  .scanlines::before {
+    content: '';
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 3px,
+      rgba(0, 0, 0, 0.012) 3px,
+      rgba(0, 0, 0, 0.012) 4px
+    );
+  }
+
+  /* ── Animated grid pulse ───────────────────────── */
+  .grid-pulse {
+    background-image:
+      linear-gradient(to right, rgba(37,99,235,0.05) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(37,99,235,0.05) 1px, transparent 1px);
+    background-size: 48px 48px;
+    animation: grid-breathe 6s ease-in-out infinite;
+  }
+
+  @keyframes grid-breathe {
+    0%, 100% { opacity: 0.5; }
+    50%       { opacity: 1; }
+  }
+
+  /* ── Code glow text ────────────────────────────── */
+  .code-glow {
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    color: #15803d;
+    text-shadow: 0 0 18px rgba(21,128,61,0.25), 0 0 40px rgba(21,128,61,0.08);
+  }
+
+  /* ── Floating animation ────────────────────────── */
+  @keyframes float {
+    0%, 100% { transform: translateY(0px) rotate(0deg); }
+    33%       { transform: translateY(-10px) rotate(1deg); }
+    66%       { transform: translateY(-5px) rotate(-1deg); }
+  }
+
+  .float { animation: float 5s ease-in-out infinite; }
+  .float-slow { animation: float 8s ease-in-out infinite; }
+  .float-fast { animation: float 3.5s ease-in-out infinite; }
+
+  /* ── Glitch text effect ────────────────────────── */
+  @keyframes glitch-1 {
+    0%   { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+    20%  { clip-path: inset(60% 0 10% 0); transform: translate(2px, 0); }
+    40%  { clip-path: inset(40% 0 40% 0); transform: translate(0, 0); }
+    100% { clip-path: inset(20% 0 60% 0); transform: translate(-2px, 0); }
+  }
+
+  /* ── Neon border pulse ─────────────────────────── */
+  @keyframes neon-pulse {
+    0%, 100% { box-shadow: 0 0 6px rgba(37,99,235,0.12), 0 0 20px rgba(37,99,235,0.04); }
+    50%       { box-shadow: 0 0 16px rgba(37,99,235,0.28), 0 0 40px rgba(37,99,235,0.10); }
+  }
+
+  .neon-pulse { animation: neon-pulse 2.5s ease-in-out infinite; }
+
+  /* ── Typing cursor blink ───────────────────────── */
+  @keyframes caret-blink {
+    50% { opacity: 0; }
+  }
+
+  /* ── Section entry wipe ────────────────────────── */
+  @keyframes wipe-in-left {
+    from { clip-path: inset(0 100% 0 0); opacity: 0; }
+    to   { clip-path: inset(0 0% 0 0);   opacity: 1; }
+  }
+
+  .wipe-in { animation: wipe-in-left 0.7s ease forwards; }
+
+  /* ── Orbit ring ────────────────────────────────── */
+  @keyframes orbit {
+    from { transform: rotate(0deg) translateX(28px) rotate(0deg); }
+    to   { transform: rotate(360deg) translateX(28px) rotate(-360deg); }
+  }
+
+  /* ── Subtle vignette ───────────────────────────── */
+  .vignette::after {
+    content: '';
+    pointer-events: none;
+    position: fixed;
+    inset: 0;
+    z-index: 2;
+    background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.06) 100%);
+  }
+
+  /* ── Mobile safe area padding ─────────────────── */
+  @supports (padding: env(safe-area-inset-bottom)) {
+    .vignette::after {
+      padding-bottom: env(safe-area-inset-bottom);
+    }
+  }
+
+  /* ── Mobile hover disable ─────────────────────── */
+  @media (hover: none) {
+    .glass:hover {
+      transform: none !important;
+      box-shadow: none !important;
+    }
+  }
+}

@@ -1,0 +1,10 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="200" height="200" fill="white"/>
+  <circle cx="100" cy="111" r="64" fill="#12B9E0" stroke="#006F86" stroke-width="8"/>
+  <path d="M44 101c15-8 32-13 50-13 27 0 49 10 63 25-15 12-34 19-55 19-25 0-47-12-58-31Z" fill="#008AAD" opacity=".48"/>
+  <path d="M42 119c20 5 43 7 69 4 20-2 37-7 51-14-5 33-31 59-65 62-27-2-48-16-55-52Z" fill="#0BA6CB" opacity=".44"/>
+  <path d="M63 73c18-11 44-18 76-16-3 17-10 31-21 42-14 15-33 23-57 25 12-10 20-25 24-45-8-1-15-3-22-6Z" fill="#38C8E9" opacity=".35"/>
+  <path d="M109 58c-16 8-28 24-37 49H55l-6 16h18c-5 19-12 33-22 42h42c8-11 14-25 19-42h26l7-16h-29c4-16 10-28 18-36 8-7 18-11 31-12l4-14c-20-3-38 1-54 13Z" fill="#007A95"/>
+  <path d="M75 42c9-5 19-7 30-7 16 0 30 5 42 14" stroke="#0E7488" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 9"/>
+  <text x="100" y="43" fill="#0E7488" font-family="Georgia, 'Times New Roman', serif" font-size="19" font-weight="700" text-anchor="middle" transform="rotate(-6 100 43)">thefinansol</text>
+</svg>
