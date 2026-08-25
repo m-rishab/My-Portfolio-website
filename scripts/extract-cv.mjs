@@ -51,6 +51,11 @@ function extractSections(text) {
 }
 
 function main() {
+  if (!statSync(cvPath, { throwIfNoEntry: false })) {
+    console.log(`CV PDF not found at ${cvPath} — skipping extraction.`);
+    return;
+  }
+
   const rawText = execFileSync('pdftotext', ['-layout', cvPath, '-'], { encoding: 'utf8' });
   const text = cleanText(rawText);
   const stats = statSync(cvPath);
