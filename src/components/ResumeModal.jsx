@@ -36,7 +36,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                   {profile.name} — Resume
                 </h3>
                 <p className="text-xs text-gray-500 hidden sm:block">
-                  Data Scientist, AI Engineer & Data Analyst
+                  Data Scientist, AI Engineer & Associate Analyst
                 </p>
               </div>
             </div>

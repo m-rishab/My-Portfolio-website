@@ -77,7 +77,7 @@ export default function Hero() {
               className="inline-flex items-center gap-2 rounded-full border border-accent-blue/25 bg-accent-blue/10 px-3 py-1 text-xs sm:text-sm text-accent-light mb-4 sm:mb-5"
             >
               <Sparkles size={15} />
-              Data Analyst & AI Engineer
+              Associate Analyst & AI Engineer
             </motion.p>
 
             <motion.h1

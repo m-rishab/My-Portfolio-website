@@ -1,6 +1,6 @@
 export const profile = {
   name: 'Rishabh Mishra',
-  title: 'Data Scientist, AI Engineer & Data Analyst',
+  title: 'Data Scientist, AI Engineer & Associate Analyst',
   email: 'rish.mishra130801@gmail.com',
   phone: '+91-9650411517',
   location: 'Faridabad, Haryana, India',
@@ -10,7 +10,7 @@ export const profile = {
     linkedin: 'https://www.linkedin.com/in/rishabhh-mishra/',
     github: 'https://github.com/m-rishab',
   },
-  roles: ['Data Scientist', 'AI Engineer', 'Data Analyst'],
+  roles: ['Data Scientist', 'AI Engineer', 'Associate Analyst'],
 };
 
 export const experience = [
@@ -26,7 +26,7 @@ export const experience = [
       'Highspring is the rebranded identity of Vaco Holdings, a global professional services organization across Consulting, Managed Services, and Talent Solutions. Vaco continues as the Talent Solutions division within Highspring.',
     companyContext:
       'Google extended workforce engagement through the Highspring / Vaco ecosystem. Earlier naming in this vendor path included Vaco Binary Semantics references.',
-    role: 'Data Analyst',
+    role: 'Associate Analyst',
     location: 'Gurugram, Haryana',
     period: 'Dec 2024 - Present',
     type: 'Full-time',
@@ -409,7 +409,7 @@ export const about = {
 export const now = [
   {
     label: 'Current Role',
-    title: 'Data Analyst — Google xWS via Highspring',
+    title: 'Associate Analyst — Google xWS via Highspring',
     detail: 'AI performance analysis, automated evaluation workflows, and SQL reporting across large-scale query datasets.',
   },
   {
