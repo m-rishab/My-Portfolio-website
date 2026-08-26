@@ -360,11 +360,95 @@ export const personalProjects = [
     tech: ['FastAPI', 'XGBoost', 'NVIDIA NIM', 'SSE', 'SQLite', 'Vanilla JS'],
     links: { github: 'https://github.com/m-rishab/ModelPilot', live: 'https://modelpilo-nv.up.railway.app' },
   },
+  {
+    id: 'diet-workout-gemini',
+    title: 'Diet & Workout Recommendation System',
+    category: 'Generative AI',
+    problem: 'How can AI deliver personalized health and fitness plans that adapt to individual body metrics, dietary preferences, and regional constraints?',
+    approach:
+      'Built a Streamlit app powered by Google Gemini Pro and LangChain that takes user inputs — age, gender, height, weight, region, dietary preference, allergies, and health conditions — and generates tailored diet and workout plans through structured prompt chains.',
+    outcome: 'Delivered a user-friendly interface producing actionable, personalized nutrition and fitness recommendations powered by GenAI.',
+    tech: ['Google Gemini Pro', 'LangChain', 'Streamlit', 'Python'],
+    links: { github: 'https://github.com/m-rishab/Diet-and-workout-Recommendation-using-Google-Gemini-pro', live: 'https://diet-and-workout-recommendation-using-app-gemini-pro.streamlit.app/' },
+  },
 ];
 
 export const navLinks = [
   { label: 'About', href: '#about' },
   { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Now', href: '#now' },
+  { label: 'Writing', href: '#writing' },
   { label: 'Contact', href: '#contact' },
+];
+
+export const about = {
+  story:
+    'Most data scientists build models. I build systems that make AI accountable. From automating response evaluation at Google to auditing dataset provenance with multi-agent pipelines, the thread is always the same — trustworthy output starts with trustworthy process.',
+  focus: 'Data Science · AI Engineering · Applied ML',
+  focusCards: [
+    {
+      label: 'Data Analytics',
+      detail: 'EDA, dashboards, and SQL-driven insights at Google scale — turning raw telemetry into actionable signals.',
+    },
+    {
+      label: 'AI Evaluation',
+      detail: 'Automated rating engines and extraction pipelines that make GenAI output measurable, not mysterious.',
+    },
+    {
+      label: 'Applied ML',
+      detail: 'XGBoost, SHAP, cost-aware routing — production models that solve real business constraints.',
+    },
+    {
+      label: 'GenAI & RAG',
+      detail: 'Retrieval-augmented systems, multi-agent pipelines, and LLM apps grounded in real data.',
+    },
+  ],
+};
+
+export const now = [
+  {
+    label: 'Current Role',
+    title: 'Data Analyst — Google xWS via Highspring',
+    detail: 'AI performance analysis, automated evaluation workflows, and SQL reporting across large-scale query datasets.',
+  },
+  {
+    label: 'Currently Exploring',
+    title: 'Multi-Agent AI Systems',
+    detail: 'Building autonomous pipelines with LangGraph and LLM orchestration for complex data workflows.',
+  },
+  {
+    label: 'Building',
+    title: 'AI Evaluation Tooling',
+    detail: 'Expanding automated scoring and extraction systems to handle multimodal GenAI outputs at scale.',
+  },
+  {
+    label: 'Currently Learning',
+    title: 'Advanced RAG Architectures',
+    detail: 'Hybrid retrieval, reranking strategies, and grounding techniques for enterprise-grade LLM applications.',
+  },
+];
+
+export const writing = [
+  {
+    date: '2025',
+    title: 'Credit Risk StressLab',
+    description: 'How can credit risk decisions become transparent, explainable, and adaptable to economic stress scenarios?',
+    tech: ['XGBoost', 'SHAP', 'Llama 3.1', 'Flask', 'React', 'NVIDIA NIM'],
+    link: 'https://github.com/m-rishab/Credit-Risk-StressLab',
+  },
+  {
+    date: '2025',
+    title: 'DataSentinel',
+    description: 'How can teams verify a dataset\'s license, provenance, and trustworthiness before building on it?',
+    tech: ['FastAPI', 'LangGraph', 'NVIDIA Nemotron', 'React', 'Tailwind', 'SQLite'],
+    link: 'https://github.com/m-rishab/DataSentinal',
+  },
+  {
+    date: '2024',
+    title: 'ModelPilot',
+    description: 'How can LLM API costs be reduced without sacrificing response quality for complex prompts?',
+    tech: ['FastAPI', 'XGBoost', 'NVIDIA NIM', 'SSE', 'SQLite', 'Vanilla JS'],
+    link: 'https://github.com/m-rishab/ModelPilot',
+  },
 ];
