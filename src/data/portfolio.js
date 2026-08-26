@@ -10,7 +10,7 @@ export const profile = {
     linkedin: 'https://www.linkedin.com/in/rishabhh-mishra/',
     github: 'https://github.com/m-rishab',
   },
-  roles: ['Data Scientist', 'AI Engineer', 'Associate Analyst'],
+  roles: ['Data Scientist', 'Data Analyst', 'AI Engineer'],
 };
 
 export const experience = [
