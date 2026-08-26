@@ -384,12 +384,12 @@ export const navLinks = [
 
 export const about = {
   story:
-    'Most data scientists build models. I build systems that make AI accountable. From automating response evaluation at Google to auditing dataset provenance with multi-agent pipelines, the thread is always the same — trustworthy output starts with trustworthy process.',
+    "I started with machine learning projects in college — loan prediction, stock trends, sentiment analysis. Then I built AI voice agents, RAG chatbots, and text-to-speech systems at TheFinansol. Now at Highspring, I work on Google Search — building automated evaluation pipelines and data extraction systems that process billions of queries across Google Search Results Page and AI Mode. The thread is the same — turning raw data into trustworthy, actionable output.",
   focus: 'Data Science · AI Engineering · Applied ML',
   focusCards: [
     {
-      label: 'Data Analytics',
-      detail: 'EDA, dashboards, and SQL-driven insights at Google scale — turning raw telemetry into actionable signals.',
+      label: 'Search & Analytics',
+      detail: 'EDA, dashboards, and SQL-driven insights across Google Search — SRP performance, AI Mode extraction, and query analysis at scale.',
     },
     {
       label: 'AI Evaluation',
