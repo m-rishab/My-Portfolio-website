@@ -13,7 +13,7 @@ export default function NameMarquee() {
       <div className="absolute inset-y-0 right-0 w-24 sm:w-32 bg-gradient-to-l from-surface to-transparent z-10 pointer-events-none" />
 
       <motion.div
-        className="flex whitespace-nowrap font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-gray-900/[0.04]"
+        className="flex whitespace-nowrap font-display text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-bold text-gray-900/[0.07]"
         initial={{ x: 0 }}
         animate={{ x: '-50%' }}
         transition={{ duration: 30, repeat: Infinity, ease: 'linear' }}

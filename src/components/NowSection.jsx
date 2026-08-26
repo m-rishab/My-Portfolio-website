@@ -6,7 +6,7 @@ const ease = [0.22, 1, 0.36, 1];
 
 export default function NowSection() {
   return (
-    <AnimatedSection id="now" className="py-10 sm:py-12 md:py-16" variant="slideLeft">
+    <AnimatedSection id="now" className="py-10 sm:py-12 md:py-16 bg-surface-raised/40" variant="slideLeft">
       <div className="max-w-6xl mx-auto px-4 sm:px-5">
         <SectionHeading
           eyebrow="Now"
@@ -24,7 +24,7 @@ export default function NowSection() {
                 <h3 className="font-display text-sm sm:text-base font-bold text-gray-900 mb-1 leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">{item.detail}</p>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{item.detail}</p>
               </div>
             </StaggerItem>
           ))}

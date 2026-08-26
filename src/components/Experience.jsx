@@ -107,7 +107,7 @@ export default function ExperienceSection() {
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
                       transition={{ duration: 0.35, delay: i * 0.05 }}
-                      className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm md:text-[14.5px] text-gray-700 leading-relaxed"
+                      className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm md:text-[14.5px] text-gray-700 leading-[1.7]"
                     >
                       <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-accent-blue shrink-0 shadow-sm shadow-blue-400/40" />
                       <span>{point}</span>

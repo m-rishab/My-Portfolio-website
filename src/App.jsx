@@ -3,6 +3,7 @@ import Hero from './components/Hero';
 import NameMarquee from './components/NameMarquee';
 import AboutSection from './components/AboutSection';
 import ExperienceSection from './components/Experience';
+import SkillsSection from './components/Skills';
 import ProjectsSection from './components/Projects';
 import NowSection from './components/NowSection';
 import WritingSection from './components/WritingSection';
@@ -25,6 +26,7 @@ export default function App() {
           <NameMarquee />
           <AboutSection />
           <ExperienceSection />
+          <SkillsSection />
           <ProjectsSection />
           <NowSection />
           <WritingSection />

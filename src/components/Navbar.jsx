@@ -51,7 +51,7 @@ export default function Navbar() {
           style={{ scaleX }}
         />
         <nav className="max-w-6xl mx-auto px-4 sm:px-5 flex items-center justify-between">
-          <a href="#about" className="flex items-center gap-3 group">
+          <a href="#about-story" className="flex items-center gap-3 group">
             <span className="google-accent-sweep w-10 h-10 rounded-xl flex items-center justify-center font-display font-bold text-white group-hover:scale-105 transition-transform">
               R
             </span>

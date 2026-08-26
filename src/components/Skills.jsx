@@ -11,7 +11,7 @@ const categoryColors = [
 
 export default function SkillsSection() {
   return (
-    <AnimatedSection id="skills" className="py-10 sm:py-12 md:py-16 border-t border-surface-border/50">
+    <AnimatedSection id="skills" className="py-10 sm:py-12 md:py-16">
       <div className="max-w-6xl mx-auto px-4 sm:px-5">
         <div className="flex flex-col sm:flex-row sm:flex-wrap sm:items-start gap-4 sm:gap-x-8 sm:gap-y-5">
           {skills.map((group, i) => (

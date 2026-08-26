@@ -9,12 +9,15 @@
   }
 
   body {
-    @apply bg-surface text-gray-900 font-sans antialiased;
+    @apply bg-surface text-gray-800 font-sans antialiased;
     overflow-x: hidden;
   }
 
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-display tracking-tight;
+  }
+
   * {
-    letter-spacing: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -39,7 +42,7 @@
   }
 
   .glass {
-    @apply bg-white/80 backdrop-blur-xl border border-surface-border shadow-sm;
+    @apply bg-white/90 backdrop-blur-xl border border-surface-border/80 shadow-sm shadow-gray-200/50;
   }
 
   .glow-accent {
@@ -144,7 +147,7 @@
 
   /* ── Code glow text ────────────────────────────── */
   .code-glow {
-    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    @apply font-mono;
     color: #15803d;
     text-shadow: 0 0 18px rgba(21,128,61,0.25), 0 0 40px rgba(21,128,61,0.08);
   }

@@ -181,7 +181,7 @@ export function SectionHeading({ eyebrow, title, subtitle }) {
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, ease }}
-          className="inline-flex items-center gap-2 text-accent-light text-xs sm:text-sm font-semibold uppercase tracking-widest mb-2 sm:mb-3"
+          className="inline-flex items-center gap-2 text-accent text-xs sm:text-sm font-semibold uppercase tracking-[0.2em] mb-2 sm:mb-3"
         >
           <motion.span
             className="inline-block h-px w-5 sm:w-6 bg-accent-light"
@@ -211,7 +211,7 @@ export function SectionHeading({ eyebrow, title, subtitle }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2, ease }}
-          className="text-gray-900 text-sm sm:text-base lg:text-lg max-w-2xl"
+          className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl"
         >
           {subtitle}
         </motion.p>

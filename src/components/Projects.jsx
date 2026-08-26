@@ -149,7 +149,7 @@ export default function ProjectsSection() {
             <div>
               <p className="text-accent-light text-xs sm:text-sm font-semibold uppercase tracking-widest mb-2 sm:mb-3">Work</p>
               <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">Projects</h2>
-              <p className="text-gray-700 text-sm sm:text-base lg:text-lg max-w-2xl">
+              <p className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl">
                 A curated selection of engineering & analytics projects across enterprise scale and applied GenAI.
               </p>
               <motion.div

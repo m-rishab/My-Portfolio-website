@@ -14,7 +14,7 @@ export default function Footer() {
         </p>
 
         <a
-          href="#about"
+          href="#about-story"
           className="inline-flex items-center gap-2 text-sm text-gray-900 hover:text-accent-light transition-colors"
           aria-label="Scroll to top"
         >

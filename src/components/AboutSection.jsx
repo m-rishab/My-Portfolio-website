@@ -19,7 +19,7 @@ export default function AboutSection() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6, delay: 0.15, ease }}
-          className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-3xl leading-relaxed mb-8 sm:mb-10"
+          className="text-gray-700 text-sm sm:text-base lg:text-lg max-w-3xl leading-relaxed mb-8 sm:mb-10"
         >
           {about.story}
         </motion.p>
@@ -33,7 +33,7 @@ export default function AboutSection() {
             <StaggerItem key={card.label}>
               <div className="glass rounded-2xl p-4 sm:p-5 h-full flex flex-col hover:shadow-lg hover:border-accent-blue/30 transition-all duration-300">
                 <h3 className="font-display text-sm sm:text-base font-bold text-gray-900 mb-1.5">{card.label}</h3>
-                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed flex-grow">{card.detail}</p>
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed flex-grow">{card.detail}</p>
               </div>
             </StaggerItem>
           ))}

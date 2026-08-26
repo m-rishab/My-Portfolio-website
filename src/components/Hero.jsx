@@ -93,7 +93,7 @@ export default function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.22 }}
-              className="text-lg sm:text-xl md:text-2xl text-gray-400 mb-4 sm:mb-5 min-h-8 sm:min-h-9"
+              className="text-lg sm:text-xl md:text-2xl text-gray-500 mb-4 sm:mb-5 min-h-8 sm:min-h-9"
             >
               <TypingRoles />
             </motion.div>

@@ -41,7 +41,7 @@ export default function WritingSection() {
                 <h3 className="font-display text-base sm:text-lg font-bold text-gray-900 mb-1.5 group-hover:text-accent transition-colors leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-gray-600 text-xs sm:text-sm leading-relaxed mb-3">
+                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed mb-3">
                   {item.description}
                 </p>
 

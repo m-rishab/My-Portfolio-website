@@ -374,7 +374,7 @@ export const personalProjects = [
 ];
 
 export const navLinks = [
-  { label: 'About', href: '#about' },
+  { label: 'About', href: '#about-story' },
   { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
   { label: 'Now', href: '#now' },

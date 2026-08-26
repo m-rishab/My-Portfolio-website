@@ -95,7 +95,7 @@ export default function ContactSection() {
                 placeholder="Your Name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-accent transition-colors text-sm"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-sm"
               />
               <input
                 type="email"
@@ -103,7 +103,7 @@ export default function ContactSection() {
                 placeholder="Email Address"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-accent transition-colors text-sm"
+                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-sm"
               />
             </div>
 
@@ -113,7 +113,7 @@ export default function ContactSection() {
               placeholder="Subject"
               value={form.subject}
               onChange={(e) => setForm({ ...form, subject: e.target.value })}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-accent transition-colors text-sm"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-sm"
             />
 
             <textarea
@@ -122,7 +122,7 @@ export default function ContactSection() {
               placeholder="Your message..."
               value={form.message}
               onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:border-accent transition-colors resize-none text-sm"
+              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all resize-none text-sm"
             />
 
             {status && <p className="text-xs sm:text-sm text-accent">{status}</p>}
