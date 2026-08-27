@@ -431,21 +431,21 @@ export const now = [
 
 export const writing = [
   {
-    date: '2025',
+    date: '2026',
     title: 'Credit Risk StressLab',
     description: 'How can credit risk decisions become transparent, explainable, and adaptable to economic stress scenarios?',
     tech: ['XGBoost', 'SHAP', 'Llama 3.1', 'Flask', 'React', 'NVIDIA NIM'],
     link: 'https://github.com/m-rishab/Credit-Risk-StressLab',
   },
   {
-    date: '2025',
+    date: '2026',
     title: 'DataSentinel',
     description: 'How can teams verify a dataset\'s license, provenance, and trustworthiness before building on it?',
     tech: ['FastAPI', 'LangGraph', 'NVIDIA Nemotron', 'React', 'Tailwind', 'SQLite'],
     link: 'https://github.com/m-rishab/DataSentinal',
   },
   {
-    date: '2024',
+    date: '2026',
     title: 'ModelPilot',
     description: 'How can LLM API costs be reduced without sacrificing response quality for complex prompts?',
     tech: ['FastAPI', 'XGBoost', 'NVIDIA NIM', 'SSE', 'SQLite', 'Vanilla JS'],
