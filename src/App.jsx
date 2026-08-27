@@ -4,7 +4,7 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import NameMarquee from './components/NameMarquee';
 import ScrollProgressBar from './components/ScrollProgressBar';
-import LightBackgroundCanvas from './components/LightBackgroundCanvas';
+import CursorReactiveCanvas from './components/CursorReactiveCanvas';
 
 // Lazy-load below-the-fold components
 const AboutSection = lazy(() => import('./components/AboutSection'));
@@ -54,8 +54,8 @@ export default function App() {
 
       <ScrollProgressBar />
 
-      {/* Light-themed animated background */}
-      <LightBackgroundCanvas />
+      {/* Cursor-reactive animated background */}
+      <CursorReactiveCanvas />
 
       <div className="relative z-10">
         <Navbar />
