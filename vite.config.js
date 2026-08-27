@@ -28,4 +28,16 @@ function extractCvPlugin() {
 
 export default defineConfig({
   plugins: [extractCvPlugin(), react()],
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom'],
+          'framer-motion': ['framer-motion'],
+          'lucide': ['lucide-react'],
+          'helmet': ['react-helmet-async'],
+        },
+      },
+    },
+  },
 });

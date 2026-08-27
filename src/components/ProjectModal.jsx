@@ -1,9 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 import { X, Layers, GitBranch, ChevronRight, ArrowDown, ZoomIn, Maximize2 } from 'lucide-react';
-import ratingEngineWorkflow from '../../assets/img/ai-rating-engine-workflow.png';
-import googleAiModePipeline from '../../assets/img/google-ai-mode-pipeline.png';
-import knowledgeBaseChatbotArchitecture from '../../assets/img/knowledge-base-chatbot-architecture.png';
+import ratingEngineWorkflow from '../../assets/img/ai-rating-engine-workflow.webp';
+import googleAiModePipeline from '../../assets/img/google-ai-mode-pipeline.webp';
+import knowledgeBaseChatbotArchitecture from '../../assets/img/knowledge-base-chatbot-architecture.webp';
 
 /* ─── Easing ─────────────────────────────────────────────────── */
 const ease = [0.22, 1, 0.36, 1];
@@ -565,6 +565,7 @@ function ArchitectureImageView({ src, alt, dark = false }) {
       {/* image — constrained height, centered, scrollable if content overflows */}
       <div className="overflow-auto p-4 flex justify-center bg-white/50">
         <img
+          loading="lazy"
           src={src}
           alt={alt}
           className="block rounded-lg max-h-[55vh] w-auto max-w-full object-contain"

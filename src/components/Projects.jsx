@@ -1,9 +1,10 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, ExternalLink, FileText, Github, Layers3, Sparkles, Workflow } from 'lucide-react';
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect, useRef } from 'react';
 import { keyProjects, personalProjects } from '../data/portfolio';
 import { AnimatedSection } from './ui';
 import ProjectModal from './ProjectModal';
+import { tilt3d } from '../lib/animex';
 
 const categoryAccents = {
   'Generative AI':    { border: 'hover:border-amber-400/50', glow: 'hover:shadow-amber-950/20', dot: 'bg-amber-500' },
