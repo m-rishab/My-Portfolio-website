@@ -330,7 +330,7 @@ export const personalProjects = [
   {
     id: 'credit-risk-stresslab',
     title: 'Credit Risk StressLab',
-    category: 'Generative AI',
+    category: 'Machine Learning',
     problem: 'How can credit risk decisions become transparent, explainable, and adaptable to economic stress scenarios?',
     approach:
       'Combined XGBoost for risk prediction with SHAP for explainability, economic stress testing for scenario analysis, and NVIDIA NIM-hosted Llama 3.1 for multilingual GenAI credit explanations in a real-time Flask + React application.',
@@ -352,7 +352,7 @@ export const personalProjects = [
   {
     id: 'modelpilot',
     title: 'ModelPilot',
-    category: 'Machine Learning',
+    category: 'Generative AI',
     problem: 'How can LLM API costs be reduced without sacrificing response quality for complex prompts?',
     approach:
       'Developed a cost-aware routing system that scores every prompt for complexity in real time using heuristics (or an optional XGBoost model) and routes to the cheapest capable NVIDIA NIM model across tiered pricing bands, with full request telemetry logged to SQLite.',
