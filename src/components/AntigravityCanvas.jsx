@@ -1,20 +1,49 @@
 import { useEffect, useRef } from 'react';
 
-// Lightweight pseudo-3D noise function for smooth fluid motion
-function noise3D(x, y, z) {
+/*
+ * Minimal scattered-dots background.
+ *
+ * A field of tiny gray/slate dots spread evenly across the whole viewport
+ * (no ring / no center cluster). They drift very slowly in an organic,
+ * noise-driven way, and softly part away from the cursor (spring return),
+ * keeping the page airy and the content readable.
+ *
+ * Implemented as a single full-viewport Canvas 2D layer — no DOM particles.
+ */
+
+// Smooth pseudo-noise for organic, non-repeating drift
+function noise2D(x, y, z) {
   return (
-    Math.sin(x + Math.sin(y + z)) * 0.4 +
-    Math.sin(y + Math.sin(x - z)) * 0.3 +
-    Math.sin(z + Math.sin(x + y)) * 0.3
+    Math.sin(x * 1.3 + Math.sin(y * 0.9 + z)) * 0.5 +
+    Math.sin(y * 1.1 + Math.sin(x - z)) * 0.4 +
+    Math.sin((x + y) * 0.7 + z) * 0.3
   );
 }
 
-const COLORS = [
-  '#2c64ed', // Google Blue
-  '#f84242', // Google Red
-  '#fbbc05', // Google Yellow
-  '#34a853', // Google Green
-];
+/* Centralised, easy-to-tune settings */
+const CONFIG = {
+  // Density (base count scaled by viewport size)
+  targetCount: 90,          // desktop base; fewer on small screens
+
+  // Appearance
+  minSize: 0.6,             // px
+  maxSize: 1.6,             // px
+  minAlpha: 0.06,
+  maxAlpha: 0.38,
+  color: [100, 116, 139],   // slate-500
+
+  // Motion
+  driftSpeed: 0.45,         // wander speed (rad-ish scale)
+  driftRadius: 18,          // px — how far a dot wanders from its anchor
+
+  // Cursor interaction
+  pushRadius: 120,          // px
+  pushStrength: 2.2,        // soft repulsion
+  springStrength: 0.06,
+  friction: 0.94,
+};
+
+const TAU = Math.PI * 2;
 
 export default function AntigravityCanvas() {
   const canvasRef = useRef(null);
@@ -25,215 +54,197 @@ export default function AntigravityCanvas() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const finePointer = window.matchMedia('(pointer: fine)').matches;
+
+    let width = 0;
+    let height = 0;
+    let dpr = 1;
+    let run = true;
     let animId;
+    let time = 0;
+    let last = performance.now();
+
+    // Cursor state
+    const cursor = { x: -9999, y: -9999, active: false, sx: -9999, sy: -9999 };
+
     let particles = [];
-    let width = (canvas.width = window.innerWidth);
-    let height = (canvas.height = window.innerHeight);
-    let dpr = window.devicePixelRatio || 1;
 
-    // Ring target positions (for smoothing/easing)
-    const ring = {
-      x: width / 2,
-      y: height / 2,
-      targetX: width / 2,
-      targetY: height / 2,
-      radius: 120,
-      width: 45,
-      isActive: false,
-    };
-
-    // Calculate count based on screen area
-    function getParticleCount() {
+    function countFor() {
       const area = width * height;
       const isMobile = width < 768;
-      if (isMobile) return Math.min(250, Math.max(150, Math.floor(area / 3000)));
-      return Math.min(600, Math.max(350, Math.floor(area / 2500)));
+      const base = isMobile ? 32 : CONFIG.targetCount;
+      // scale gently with screen area so it stays clean
+      return Math.max(18, Math.round(base * Math.min(1.6, area / (1280 * 800))));
     }
 
-    function initParticles() {
-      const count = getParticleCount();
+    function build() {
+      const count = countFor();
+      const c = CONFIG.color;
       particles = [];
-
       for (let i = 0; i < count; i++) {
+        const x = Math.random() * width;
+        const y = Math.random() * height;
+        const size = CONFIG.minSize + Math.random() * (CONFIG.maxSize - CONFIG.minSize);
+        const alpha = CONFIG.minAlpha + Math.random() * (CONFIG.maxAlpha - CONFIG.minAlpha);
+        // stable per-particle noise parameters
+        const seed = Math.random() * 10;
+        const px = Math.random() * 100 + 20; // phase offsets
+        const py = Math.random() * 100 + 20;
         particles.push({
-          refX: Math.random() * width,
-          refY: Math.random() * height,
-          vx: (Math.random() - 0.5) * 0.25, // slow drift
-          vy: (Math.random() - 0.5) * 0.25,
-          scale: 0,
-          maxScale: Math.random() * 0.6 + 0.5,
-          color: COLORS[Math.floor(Math.random() * COLORS.length)],
-          angleOffset: Math.random() * Math.PI * 2,
-          length: Math.random() * 10 + 10, // capsule width
-          thickness: Math.random() * 2 + 2.5, // capsule height
-          seed: Math.random() * 100,
+          ax: x, ay: y,    // anchor
+          x, y,
+          vx: 0, vy: 0,    // cursor-return velocity
+          size, alpha,
+          seed, px, py,
         });
       }
     }
 
     function resize() {
+      dpr = Math.min(window.devicePixelRatio || 1, 2);
       width = window.innerWidth;
       height = window.innerHeight;
-      dpr = window.devicePixelRatio || 1;
-
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      canvas.style.width = `${width}px`;
-      canvas.style.height = `${height}px`;
-
-      ctx.scale(dpr, dpr);
-      initParticles();
+      canvas.width = Math.floor(width * dpr);
+      canvas.height = Math.floor(height * dpr);
+      canvas.style.width = width + 'px';
+      canvas.style.height = height + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      build();
     }
 
-    const handleMouseMove = (e) => {
-      ring.targetX = e.clientX;
-      ring.targetY = e.clientY;
-      ring.isActive = true;
+    // ── Pointer ────────────────────────────────────────────
+    const onMove = (e) => {
+      cursor.active = true;
+      cursor.x = e.clientX;
+      cursor.y = e.clientY;
     };
-
-    const handleMouseLeave = () => {
-      ring.isActive = false;
-    };
-
-    const handleTouchMove = (e) => {
+    const onLeave = () => { cursor.active = false; };
+    const onTouch = (e) => {
       if (e.touches && e.touches[0]) {
-        ring.targetX = e.touches[0].clientX;
-        ring.targetY = e.touches[0].clientY;
-        ring.isActive = true;
+        cursor.active = true;
+        cursor.x = e.touches[0].clientX;
+        cursor.y = e.touches[0].clientY;
       }
     };
+    const onTouchEnd = () => { cursor.active = false; };
 
-    const handleTouchEnd = () => {
-      ring.isActive = false;
-    };
+    if (finePointer) {
+      window.addEventListener('pointermove', onMove, { passive: true });
+      document.documentElement.addEventListener('mouseleave', onLeave, { passive: true });
+    } else {
+      window.addEventListener('touchmove', onTouch, { passive: true });
+      window.addEventListener('touchend', onTouchEnd, { passive: true });
+    }
+    window.addEventListener('resize', resize);
+    const ro = new ResizeObserver(resize);
+    ro.observe(canvas);
 
-    window.addEventListener('mousemove', handleMouseMove, { passive: true });
-    window.addEventListener('mouseleave', handleMouseLeave);
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
-    window.addEventListener('touchend', handleTouchEnd);
+    // Frame-rate normalised spring/friction
+    const STEP = 60;
+    const springF = CONFIG.springStrength * STEP;
+    const fricF = (dt) => Math.pow(CONFIG.friction, STEP * dt);
 
-    let startTime = Date.now();
-
-    // Soft cursor glow trail (history of smoothed pointer positions)
+    // Soft cursor glow trail
     const glowHistory = [];
-    const GLOW = { life: 0.45, radius: 90, strength: 0.16 }; // seconds, px, max alpha
+    const GLOW = { life: 0.5, radius: 110, strength: 0.10 };
 
-    function render() {
+    function render(now) {
+      if (!run) return;
+      const dt = Math.min(0.033, (now - last) / 1000);
+      last = now;
+      if (!reduceMotion) time += dt * CONFIG.driftSpeed;
+
       ctx.clearRect(0, 0, width, height);
 
-      const time = (Date.now() - startTime) * 0.001;
-
-      // Easing ring center towards target
-      // When mouse is inactive, let it drift gently in a circular path in the center of the screen
-      if (!ring.isActive) {
-        ring.targetX = width / 2 + Math.sin(time * 0.5) * 100;
-        ring.targetY = height / 2 + Math.cos(time * 0.4) * 80;
-      }
-
-      ring.x += (ring.targetX - ring.x) * 0.06;
-      ring.y += (ring.targetY - ring.y) * 0.06;
-
-      // ── Cursor glow trail ─────────────────────────────────────
-      if (ring.isActive) {
-        glowHistory.push({ x: ring.x, y: ring.y, born: time });
+      // ── Cursor glow trail (subtle) ────────────────────────
+      if (cursor.active) {
+        // smooth the cursor a touch for a fluid trail
+        cursor.sx += (cursor.x - cursor.sx) * 0.12;
+        cursor.sy += (cursor.y - cursor.sy) * 0.12;
+        glowHistory.push({ x: cursor.sx, y: cursor.sy, t: time });
       }
       for (let k = glowHistory.length - 1; k >= 0; k--) {
         const g = glowHistory[k];
-        if (time - g.born > GLOW.life) {
-          glowHistory.splice(k, 1);
-          continue;
-        }
-        const fade = 1 - (time - g.born) / GLOW.life;
+        if (time - g.t > GLOW.life) { glowHistory.splice(k, 1); continue; }
+        const fade = 1 - (time - g.t) / GLOW.life;
         const r = GLOW.radius * (0.7 + 0.3 * (1 - fade));
         const grad = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, r);
-        grad.addColorStop(0, `rgba(37,99,235,${GLOW.strength * fade})`);
-        grad.addColorStop(1, 'rgba(37,99,235,0)');
+        grad.addColorStop(0, `rgba(${CONFIG.color[0]},${CONFIG.color[1]},${CONFIG.color[2]},${GLOW.strength * fade})`);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
         ctx.fillStyle = grad;
         ctx.fillRect(g.x - r, g.y - r, r * 2, r * 2);
       }
 
-      // Ring radius breathing effect
-      const currentRadius = ring.radius + Math.sin(time * 1.5) * 6 + Math.cos(time * 3.0) * 3;
+      if (!reduceMotion) {
+        const PR2 = CONFIG.pushRadius * CONFIG.pushRadius;
 
-      for (let i = 0; i < particles.length; i++) {
-        const p = particles[i];
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
 
-        // 1. Slow drift
-        p.refX += p.vx;
-        p.refY += p.vy;
+          // Organic wander around the anchor (drift)
+          const wobbleX = noise2D(p.ax * 0.004 + p.px, p.ay * 0.004, time) * CONFIG.driftRadius;
+          const wobbleY = noise2D(p.ax * 0.004, p.ay * 0.004 + p.py, time) * CONFIG.driftRadius;
+          const wanderX = p.ax + wobbleX;
+          const wanderY = p.ay + wobbleY;
 
-        // Wrap around screen boundaries
-        if (p.refX < -50) p.refX = width + 50;
-        else if (p.refX > width + 50) p.refX = -50;
-        if (p.refY < -50) p.refY = height + 50;
-        else if (p.refY > height + 50) p.refY = -50;
+          // Cursor gently parts the dots
+          if (cursor.active) {
+            const dx = p.x - cursor.x;
+            const dy = p.y - cursor.y;
+            const d2 = dx * dx + dy * dy;
+            if (d2 < PR2 && d2 > 0.0001) {
+              const d = Math.sqrt(d2);
+              const falloff = Math.pow(1 - d / CONFIG.pushRadius, 1.4);
+              const s = CONFIG.pushStrength * falloff * dt * STEP;
+              p.vx += (dx / d) * s;
+              p.vy += (dy / d) * s;
+            }
+          }
 
-        // 2. Physics & displacements
-        // Distance to the eased ring center
-        const dx = p.refX - ring.x;
-        const dy = p.refY - ring.y;
-        const dist = Math.sqrt(dx * dx + dy * dy);
+          // Spring toward the wandering anchor + friction
+          p.vx += (wanderX - p.x) * springF * dt;
+          p.vy += (wanderY - p.y) * springF * dt;
+          p.vx *= fricF(dt);
+          p.vy *= fricF(dt);
+          p.x += p.vx;
+          p.y += p.vy;
 
-        // Target scale based on proximity to the ring boundary (Gaussian filter)
-        const targetScale = Math.exp(-Math.pow(dist - currentRadius, 2) / (2 * Math.pow(ring.width, 2)));
-
-        // Smoothly interpolate current scale
-        p.scale += (targetScale - p.scale) * 0.08;
-
-        // If scale is practically zero, skip rendering
-        if (p.scale < 0.015) continue;
-
-        // 3. Fluid noise displacement
-        const nX = noise3D(p.refX * 0.003 + p.seed, p.refY * 0.003, time * 0.5) * 22;
-        const nY = noise3D(p.refX * 0.003, p.refY * 0.003 + p.seed, time * 0.5) * 22;
-
-        // Push away/pull force near the ring
-        const angle = Math.atan2(dy, dx);
-        const ringPush = p.scale * 18;
-        const pushX = Math.cos(angle) * ringPush;
-        const pushY = Math.sin(angle) * ringPush;
-
-        // Final positions
-        const renderX = p.refX + nX + pushX;
-        const renderY = p.refY + nY + pushY;
-
-        // 4. Render rotated capsule
-        ctx.save();
-        ctx.translate(renderX, renderY);
-        // Rotate along the ring radius direction plus some noise rotation
-        const noiseRot = noise3D(p.refX * 0.01, p.refY * 0.01, time * 0.3) * 0.6;
-        ctx.rotate(angle + Math.PI / 2 + noiseRot);
-
-        const currentScale = p.scale * p.maxScale;
-        ctx.scale(currentScale, currentScale);
-
-        // Subtle alpha fade based on scale
-        ctx.globalAlpha = Math.min(1.0, currentScale * 1.5);
-
-        ctx.beginPath();
-        // Draw capsule (rounded rectangle)
-        ctx.roundRect(-p.length / 2, -p.thickness / 2, p.length, p.thickness, p.thickness / 2);
-        ctx.fillStyle = p.color;
-        ctx.fill();
-
-        ctx.restore();
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = `rgb(${CONFIG.color[0]},${CONFIG.color[1]},${CONFIG.color[2]})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, TAU);
+          ctx.fill();
+        }
+      } else {
+        // Reduced motion: static dots at anchor
+        for (let i = 0; i < particles.length; i++) {
+          const p = particles[i];
+          ctx.globalAlpha = p.alpha;
+          ctx.fillStyle = `rgb(${CONFIG.color[0]},${CONFIG.color[1]},${CONFIG.color[2]})`;
+          ctx.beginPath();
+          ctx.arc(p.ax, p.ay, p.size, 0, TAU);
+          ctx.fill();
+        }
       }
 
+      ctx.globalAlpha = 1;
       animId = requestAnimationFrame(render);
     }
 
     resize();
-    render();
-
-    window.addEventListener('resize', resize);
+    last = performance.now();
+    animId = requestAnimationFrame(render);
 
     return () => {
+      run = false;
       cancelAnimationFrame(animId);
+      window.removeEventListener('pointermove', onMove);
+      document.documentElement.removeEventListener('mouseleave', onLeave);
+      window.removeEventListener('touchmove', onTouch);
+      window.removeEventListener('touchend', onTouchEnd);
       window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseleave', handleMouseLeave);
-      window.removeEventListener('touchmove', handleTouchMove);
-      window.removeEventListener('touchend', handleTouchEnd);
+      ro.disconnect();
     };
   }, []);
 
@@ -241,7 +252,7 @@ export default function AntigravityCanvas() {
     <canvas
       ref={canvasRef}
       className="pointer-events-none fixed inset-0 z-0 h-full w-full"
-      style={{ opacity: 0.85 }}
+      style={{ opacity: 1 }}
       aria-hidden="true"
     />
   );
