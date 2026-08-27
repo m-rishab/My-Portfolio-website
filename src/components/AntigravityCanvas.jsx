@@ -114,6 +114,10 @@ export default function AntigravityCanvas() {
 
     let startTime = Date.now();
 
+    // Soft cursor glow trail (history of smoothed pointer positions)
+    const glowHistory = [];
+    const GLOW = { life: 0.45, radius: 90, strength: 0.16 }; // seconds, px, max alpha
+
     function render() {
       ctx.clearRect(0, 0, width, height);
 
@@ -128,6 +132,25 @@ export default function AntigravityCanvas() {
 
       ring.x += (ring.targetX - ring.x) * 0.06;
       ring.y += (ring.targetY - ring.y) * 0.06;
+
+      // ── Cursor glow trail ─────────────────────────────────────
+      if (ring.isActive) {
+        glowHistory.push({ x: ring.x, y: ring.y, born: time });
+      }
+      for (let k = glowHistory.length - 1; k >= 0; k--) {
+        const g = glowHistory[k];
+        if (time - g.born > GLOW.life) {
+          glowHistory.splice(k, 1);
+          continue;
+        }
+        const fade = 1 - (time - g.born) / GLOW.life;
+        const r = GLOW.radius * (0.7 + 0.3 * (1 - fade));
+        const grad = ctx.createRadialGradient(g.x, g.y, 0, g.x, g.y, r);
+        grad.addColorStop(0, `rgba(37,99,235,${GLOW.strength * fade})`);
+        grad.addColorStop(1, 'rgba(37,99,235,0)');
+        ctx.fillStyle = grad;
+        ctx.fillRect(g.x - r, g.y - r, r * 2, r * 2);
+      }
 
       // Ring radius breathing effect
       const currentRadius = ring.radius + Math.sin(time * 1.5) * 6 + Math.cos(time * 3.0) * 3;

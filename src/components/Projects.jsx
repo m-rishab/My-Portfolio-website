@@ -45,20 +45,14 @@ function ProjectCard({ project, index, onViewProcess }) {
         )}
       </div>
 
-      <h3 className="font-display text-lg sm:text-xl font-bold text-gray-900 mb-3 sm:mb-3.5 leading-snug">{project.title}</h3>
+      <h3 className="font-display text-lg sm:text-xl font-bold text-gray-900 mb-2.5 leading-snug">{project.title}</h3>
 
-      <div className="space-y-3 sm:space-y-3.5 flex-grow">
-        {[
-          { label: 'Problem', value: project.problem },
-          { label: 'What I did', value: project.approach },
-          { label: 'Result', value: project.outcome },
-        ].map((item) => (
-          <div key={item.label}>
-            <p className="text-[10px] sm:text-[11px] font-semibold uppercase tracking-wider text-gray-500 mb-0.5">{item.label}</p>
-            <p className="text-xs sm:text-sm leading-relaxed text-gray-800">{item.value}</p>
-          </div>
-        ))}
-      </div>
+      <p className="text-xs sm:text-sm leading-relaxed text-gray-800 line-clamp-3">{project.description || project.approach}</p>
+
+      <p className="mt-2.5 flex items-start gap-2 text-[11px] sm:text-xs text-emerald-700 leading-relaxed line-clamp-2">
+        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
+        {project.outcome}
+      </p>
 
       <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-4 sm:mt-5 mb-4 sm:mb-5">
         {project.tech.map((tech) => (
@@ -68,7 +62,7 @@ function ProjectCard({ project, index, onViewProcess }) {
         ))}
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-3 sm:pt-4 border-t border-surface-border">
+      <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-3 sm:pt-4 mt-auto border-t border-surface-border">
         {/* View Process button for projects with processDoc */}
         {project.processDoc && onViewProcess && (
           <button
