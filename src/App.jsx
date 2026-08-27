@@ -4,9 +4,9 @@ import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import NameMarquee from './components/NameMarquee';
 import ScrollProgressBar from './components/ScrollProgressBar';
+import LightBackgroundCanvas from './components/LightBackgroundCanvas';
 
 // Lazy-load below-the-fold components
-const VantaBackground = lazy(() => import('./components/VantaBackground'));
 const AboutSection = lazy(() => import('./components/AboutSection'));
 const ExperienceSection = lazy(() => import('./components/Experience'));
 const ProjectsSection = lazy(() => import('./components/Projects'));
@@ -54,10 +54,8 @@ export default function App() {
 
       <ScrollProgressBar />
 
-      <Suspense fallback={null}>
-        {/* Light-themed animated background */}
-        <VantaBackground />
-      </Suspense>
+      {/* Light-themed animated background */}
+      <LightBackgroundCanvas />
 
       <div className="relative z-10">
         <Navbar />
