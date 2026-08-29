@@ -26,6 +26,10 @@ export const experience = [
       'Highspring is the rebranded identity of Vaco Holdings, a global professional services organization across Consulting, Managed Services, and Talent Solutions. Vaco continues as the Talent Solutions division within Highspring.',
     companyContext:
       'Google extended workforce engagement through the Highspring / Vaco ecosystem. Earlier naming in this vendor path included Vaco Binary Semantics references.',
+    roles: [
+      { title: 'Data Analyst', period: 'Jun 2025 - Present' },
+      { title: 'Associate Analyst', period: 'Dec 2024 - Jun 2025' },
+    ],
     role: 'Data Analyst',
     location: 'Gurugram, Haryana',
     period: 'Dec 2024 - Present',

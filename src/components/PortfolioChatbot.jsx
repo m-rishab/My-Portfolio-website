@@ -295,7 +295,7 @@ function isReassuranceQuestion(text) {
 function getExperienceAnswer() {
   return `Rishabh brings deep experience in enterprise-scale analytics and production AI systems:
 
-🔹 Google xWS via Highspring (Data Analyst | Dec 2024 – Present):
+🔹 Google xWS via Highspring (Associate Analyst | Dec 2024 – Jun 2025 → Data Analyst | Jun 2025 – Present):
 • Large-Scale SQL: Analyzes 3B+ weekly search queries in Google's internal PLX environment to prioritize high-impact datasets.
 • AI Rating Engine: Built an automated evaluation workflow using prompt engineering and semantic similarity (90% precision across 5,000+ queries, 70% manual review effort reduction).
 • Extraction Pipeline: Engineered a Python + Regex frontend pipeline processing 10,000+ weekly Google AI Mode queries.

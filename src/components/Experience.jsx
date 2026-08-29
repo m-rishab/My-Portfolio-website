@@ -64,9 +64,22 @@ export default function ExperienceSection() {
                   </span>
                 </div>
 
-                <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-gray-900 leading-tight mb-1.5">
-                  {job.role}
-                </h3>
+                {job.roles ? (
+                  <div className="mb-1.5 space-y-1">
+                    {job.roles.map((r) => (
+                      <div key={r.title} className="flex flex-wrap items-baseline gap-x-2">
+                        <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-gray-900 leading-tight">
+                          {r.title}
+                        </h3>
+                        <span className="text-[11px] sm:text-xs text-gray-500">{r.period}</span>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-gray-900 leading-tight mb-1.5">
+                    {job.role}
+                  </h3>
+                )}
 
                 <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
                   <span className="text-xs sm:text-sm font-medium text-accent-light">
