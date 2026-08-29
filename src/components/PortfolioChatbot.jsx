@@ -295,7 +295,7 @@ function isReassuranceQuestion(text) {
 function getExperienceAnswer() {
   return `Rishabh brings deep experience in enterprise-scale analytics and production AI systems:
 
-🔹 Google xWS via Highspring (Associate Analyst | Dec 2024 – Present):
+🔹 Google xWS via Highspring (Data Analyst | Dec 2024 – Present):
 • Large-Scale SQL: Analyzes 3B+ weekly search queries in Google's internal PLX environment to prioritize high-impact datasets.
 • AI Rating Engine: Built an automated evaluation workflow using prompt engineering and semantic similarity (90% precision across 5,000+ queries, 70% manual review effort reduction).
 • Extraction Pipeline: Engineered a Python + Regex frontend pipeline processing 10,000+ weekly Google AI Mode queries.
@@ -361,7 +361,7 @@ EDA, Statistical Modeling, Cohort & Funnel Analysis, Pandas, NumPy, Tableau, Pow
 }
 
 function getIntroAnswer() {
-  return `Rishabh Mishra is an Associate Analyst & AI Engineer based in Haryana, India.
+  return `Rishabh Mishra is an Data Analyst & AI Engineer based in Haryana, India.
 
 He works on Google xWS projects via Highspring, specializing in large-scale data analytics, AI response evaluation, and GenAI systems (RAG, LLM orchestration, NLP). He holds a B.Tech in CSE (AI & ML) from J.C. Bose University (YMCA).`;
 }
