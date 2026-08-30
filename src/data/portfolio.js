@@ -4,8 +4,8 @@ export const profile = {
   email: 'rish.mishra130801@gmail.com',
   phone: '+91-9650411517',
   location: 'Faridabad, Haryana, India',
-  cvUrl: 'https://drive.google.com/file/d/1Rq0D3AITueDZdNEuksm3obFP22YQuaps/view?usp=sharing',
-  cvPreviewUrl: 'https://drive.google.com/file/d/1Rq0D3AITueDZdNEuksm3obFP22YQuaps/preview',
+  cvUrl: 'https://drive.google.com/file/d/1nof1qCZEbznEaUdwiXV41xYcjRcWsQvh/view?usp=sharing',
+  cvPreviewUrl: 'https://drive.google.com/file/d/1nof1qCZEbznEaUdwiXV41xYcjRcWsQvh/preview',
   social: {
     linkedin: 'https://www.linkedin.com/in/rishabhh-mishra/',
     github: 'https://github.com/m-rishab',

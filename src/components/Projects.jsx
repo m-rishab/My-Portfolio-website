@@ -1,6 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { ArrowUpRight, ExternalLink, FileText, Github, Layers3, Sparkles, Workflow } from 'lucide-react';
-import { useState, useMemo, useEffect, useRef } from 'react';
+import { forwardRef, useState, useMemo } from 'react';
 import { keyProjects, personalProjects } from '../data/portfolio';
 import { AnimatedSection } from './ui';
 import ProjectModal from './ProjectModal';
@@ -13,11 +13,12 @@ const categoryAccents = {
   'Company Project':  { border: 'hover:border-blue-400/50', glow: 'hover:shadow-blue-950/20', dot: 'bg-blue-500' },
 };
 
-function ProjectCard({ project, index, onViewProcess }) {
+const ProjectCard = forwardRef(function ProjectCard({ project, index, onViewProcess }, ref) {
   const accent = categoryAccents[project.category] || categoryAccents['Company Project'];
 
   return (
     <motion.article
+      ref={ref}
       layout
       initial={{ opacity: 0, y: 24, scale: 0.96 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -111,7 +112,7 @@ function ProjectCard({ project, index, onViewProcess }) {
       </div>
     </motion.article>
   );
-}
+});
 
 export default function ProjectsSection() {
   const [activeProject, setActiveProject] = useState(null);
