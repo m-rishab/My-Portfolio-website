@@ -1,5 +1,5 @@
 import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
-import { useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 
 /* ─── Easing ─────────────────────────────────────────────────── */
 const ease = [0.22, 1, 0.36, 1];
@@ -59,6 +59,92 @@ const staggerItem = {
     transition: { duration: 0.55, ease },
   },
 };
+
+/* ─── SplitText: masked word-by-word reveal ─────────────────── */
+export function SplitText({ text, accent = '', className = '' }) {
+  const ref = useRef(null);
+
+  const segments = useMemo(() => {
+    const out = [];
+    const addWords = (phrase, acc) => {
+      phrase
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)
+        .forEach((w) => out.push({ w, acc }));
+    };
+    if (accent && text.includes(accent)) {
+      const before = text.slice(0, text.indexOf(accent));
+      const after = text.slice(text.indexOf(accent) + accent.length);
+      if (before) addWords(before, false);
+      out.push({ w: accent, acc: true });
+      if (after) addWords(after, false);
+    } else {
+      addWords(text, false);
+    }
+    return out;
+  }, [text, accent]);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          el.classList.add('in');
+          io.disconnect();
+        }
+      },
+      { threshold: 0.2 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <span ref={ref} className={`split-text ${className}`} aria-label={text}>
+      {segments.map((s, i) => (
+        <span key={i} className="split-word" style={{ '--d': `${i * 0.045}s` }}>
+          <span className={`split-word-inner ${s.acc ? 'split-accent' : ''}`}>{s.w}</span>
+        </span>
+      ))}
+    </span>
+  );
+}
+
+/* ─── TextRoll: masked slide-up hover label ─────────────────── */
+export function TextRoll({ label, accent = '#2f5ce8', className = '' }) {
+  return (
+    <span className={`tr-wrap ${className}`} style={{ '--tr-accent': accent }}>
+      <span className="tr-stack">
+        <span className="tr-top">{label}</span>
+        <span className="tr-bottom" aria-hidden="true">{label}</span>
+      </span>
+    </span>
+  );
+}
+
+/* ─── PaperSectionHeader: [01] TAG —hairline— then huge title ─── */
+export function SectionHeader({ index, tag, title, accent = '', dark = false }) {
+  const titleColor = dark ? 'text-headline' : 'text-ink';
+  const tagClass = dark ? 'text-muted-dark' : '';
+  return (
+    <div className="mb-10 sm:mb-14 md:mb-16">
+      <div className="mb-4 flex items-center gap-4">
+        <span className={`font-mono text-xs ${dark ? 'text-[#8fabf6]' : 'text-[#2f5ce8]'}`}>{index}</span>
+        <span className={`font-mono text-[10px] uppercase tracking-[0.22em] ${tagClass} section-tag`}>{tag}</span>
+        <span className="h-px flex-1 bg-gradient-to-r from-hairline to-transparent" style={dark ? { backgroundImage: 'linear-gradient(to right, rgba(255,255,255,0.12), transparent)' } : undefined} />
+      </div>
+      <h2
+        className={`heading-skew font-display font-bold uppercase leading-[0.95] tracking-[-0.025em] text-[clamp(2rem,5.5vw,4.5rem)] ${titleColor} ${
+          dark ? 'heading-dark' : 'heading-light'
+        }`}
+      >
+        <SplitText text={title} accent={accent} />
+      </h2>
+    </div>
+  );
+}
 
 /* ─── AnimatedSection ────────────────────────────────────────── */
 export function AnimatedSection({ children, className = '', id, delay = 0, variant = 'fadeUp' }) {
@@ -200,7 +286,7 @@ export function SectionHeading({ eyebrow, title, subtitle }) {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
         transition={{ duration: 0.6, delay: 0.1, ease }}
-        className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4"
+        className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4"
       >
         {title}
       </motion.h2>
@@ -211,7 +297,7 @@ export function SectionHeading({ eyebrow, title, subtitle }) {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5, delay: 0.2, ease }}
-          className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl"
+          className="text-gray-600 dark:text-slate-300 text-sm sm:text-base lg:text-lg max-w-2xl"
         >
           {subtitle}
         </motion.p>

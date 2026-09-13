@@ -23,19 +23,19 @@ export default function ResumeModal({ isOpen, onClose }) {
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.92, y: 20 }}
           transition={{ type: 'spring', damping: 26, stiffness: 320 }}
-          className="relative z-10 flex flex-col w-full max-w-5xl h-[88vh] rounded-2xl border border-surface-border bg-white shadow-2xl overflow-hidden"
+          className="relative z-10 flex flex-col w-full max-w-5xl h-[88vh] rounded-2xl border border-surface-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-2xl overflow-hidden"
         >
           {/* Header */}
-          <div className="flex items-center justify-between px-5 py-3.5 border-b border-surface-border bg-slate-50/90 backdrop-blur-sm">
+          <div className="flex items-center justify-between px-5 py-3.5 border-b border-surface-border dark:border-slate-800 bg-slate-50/90 dark:bg-slate-900/90 backdrop-blur-sm">
             <div className="flex items-center gap-2.5">
               <span className="p-2 rounded-xl bg-accent-blue/10 text-accent">
                 <FileText size={18} />
               </span>
               <div>
-                <h3 className="font-display font-bold text-gray-900 text-sm sm:text-base">
+                <h3 className="font-display font-bold text-gray-900 dark:text-white text-sm sm:text-base">
                   {profile.name} — Resume
                 </h3>
-                <p className="text-xs text-gray-500 hidden sm:block">
+                <p className="text-xs text-gray-500 dark:text-slate-400 hidden sm:block">
                   Data Scientist, AI Engineer & Data Analyst
                 </p>
               </div>
@@ -57,7 +57,7 @@ export default function ResumeModal({ isOpen, onClose }) {
                 href={profile.cvUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-surface-border bg-white text-gray-700 hover:bg-gray-100 transition-colors"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border border-surface-border dark:border-slate-700 bg-white dark:bg-slate-800 text-gray-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 transition-colors"
                 title="Open in new tab"
               >
                 <ExternalLink size={14} />
@@ -67,7 +67,7 @@ export default function ResumeModal({ isOpen, onClose }) {
               <button
                 type="button"
                 onClick={onClose}
-                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-200/60 transition-colors ml-1"
+                className="p-1.5 rounded-lg text-gray-400 hover:text-gray-700 dark:hover:text-white hover:bg-gray-200/60 dark:hover:bg-slate-800 transition-colors ml-1"
                 aria-label="Close modal"
               >
                 <X size={18} />
@@ -76,11 +76,11 @@ export default function ResumeModal({ isOpen, onClose }) {
           </div>
 
           {/* PDF Viewer Body */}
-          <div className="flex-1 w-full bg-slate-100 p-2 sm:p-3 overflow-hidden">
+          <div className="flex-1 w-full bg-slate-100 dark:bg-slate-950 p-2 sm:p-3 overflow-hidden">
             <iframe
               src={profile.cvPreviewUrl || profile.cvUrl}
               title="Resume Viewer"
-              className="w-full h-full rounded-xl border border-surface-border bg-white shadow-inner"
+              className="w-full h-full rounded-xl border border-surface-border dark:border-slate-800 bg-white dark:bg-slate-900 shadow-inner"
             />
           </div>
         </motion.div>

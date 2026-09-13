@@ -978,10 +978,10 @@ export default function PortfolioChatbot() {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.85, y: 24, transition: { duration: 0.2 } }}
             transition={{ type: 'spring', stiffness: 360, damping: 28 }}
-            className="flex h-[min(490px,calc(100vh-5rem))] w-[calc(100vw-2rem)] sm:w-[365px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-900/15 backdrop-blur-xl"
+            className="flex h-[min(490px,calc(100vh-5rem))] w-[calc(100vw-2rem)] sm:w-[365px] flex-col overflow-hidden rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white/95 dark:bg-slate-900/95 shadow-2xl shadow-slate-900/15 backdrop-blur-xl"
           >
             {/* Header */}
-            <div className="border-b border-slate-200/80 bg-white px-4 py-2.5">
+            <div className="border-b border-slate-200/80 dark:border-slate-800 bg-white dark:bg-slate-900 px-4 py-2.5">
               <div className="flex items-center justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-2.5">
                   <span className="relative grid h-8 w-8 shrink-0 place-items-center rounded-xl bg-accent-blue/10 text-accent-blue">
@@ -989,13 +989,13 @@ export default function PortfolioChatbot() {
                   </span>
                   <div className="min-w-0">
                     <div className="flex items-center gap-1.5">
-                      <p className="truncate font-display text-sm font-bold text-slate-900">Portfolio AI</p>
+                      <p className="truncate font-display text-sm font-bold text-slate-900 dark:text-white">Portfolio AI</p>
                       <span className="flex h-1.5 w-1.5 relative">
                         <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                         <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500" />
                       </span>
                     </div>
-                    <p className="truncate text-[11px] text-slate-500">Ask about work, projects & skills</p>
+                    <p className="truncate text-[11px] text-slate-500 dark:text-slate-400">Ask about work, projects & skills</p>
                   </div>
                 </div>
                 <motion.button
@@ -1003,7 +1003,7 @@ export default function PortfolioChatbot() {
                   whileHover={{ scale: 1.1, rotate: 90 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => setOpen(false)}
-                  className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 hover:text-slate-700"
+                  className="rounded-lg p-1 text-slate-400 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-white"
                   aria-label="Close chatbot"
                 >
                   <X size={17} />
@@ -1012,7 +1012,7 @@ export default function PortfolioChatbot() {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 space-y-3 overflow-y-auto px-3.5 py-3.5 bg-slate-50/70">
+            <div className="flex-1 space-y-3 overflow-y-auto px-3.5 py-3.5 bg-slate-50/70 dark:bg-slate-950/70">
               {visibleMessages.map((message, index) => (
                 <div key={message.id || `${message.role}-${index}`} className={`flex ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`max-w-[90%] ${message.role === 'user' ? 'items-end' : 'items-start'}`}>
@@ -1020,13 +1020,13 @@ export default function PortfolioChatbot() {
                       className={`whitespace-pre-line text-[13px] leading-relaxed shadow-xs ${
                         message.role === 'user'
                           ? 'bg-accent text-white rounded-2xl rounded-tr-xs px-3.5 py-2 font-normal'
-                          : 'border border-slate-200/90 bg-white text-slate-800 rounded-2xl rounded-tl-xs px-3.5 py-2.5'
+                          : 'border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-800 text-slate-800 dark:text-slate-100 rounded-2xl rounded-tl-xs px-3.5 py-2.5'
                       }`}
                     >
                       {linkify(message.text)}
                     </div>
                     {message.role === 'bot' && message.fromGroq && message.text && (
-                      <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-emerald-600">
+                      <p className="mt-1 flex items-center gap-1 text-[10px] font-medium text-emerald-600 dark:text-emerald-400">
                         <span>⚡</span><span>Groq · {GROQ_MODEL}</span>
                       </p>
                     )}
@@ -1040,7 +1040,7 @@ export default function PortfolioChatbot() {
                                 href={action.href}
                                 target={action.href.startsWith('#') || action.href.startsWith('mailto:') ? undefined : '_blank'}
                                 rel={action.href.startsWith('#') || action.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-                                className="inline-flex items-center gap-1 rounded-lg border border-amber-300 bg-amber-50/90 px-2 py-1 text-[11px] font-semibold text-amber-900 transition-colors hover:border-amber-400 hover:bg-amber-100 shadow-xs"
+                                className="inline-flex items-center gap-1 rounded-lg border border-amber-300 dark:border-amber-700 bg-amber-50/90 dark:bg-amber-950/60 px-2 py-1 text-[11px] font-semibold text-amber-900 dark:text-amber-200 transition-colors hover:border-amber-400 hover:bg-amber-100 shadow-xs"
                               >
                                 <BriefcaseBusiness size={11} />
                                 {action.label}
@@ -1054,7 +1054,7 @@ export default function PortfolioChatbot() {
                               key={suggestion}
                               type="button"
                               onClick={() => sendMessage(suggestion)}
-                              className="rounded-lg border border-blue-200 bg-blue-50/80 px-2 py-1 text-left text-[11px] font-medium text-blue-700 transition-all hover:border-blue-300 hover:bg-blue-100/90 shadow-xs"
+                              className="rounded-lg border border-blue-200 dark:border-blue-900/60 bg-blue-50/80 dark:bg-blue-950/40 px-2 py-1 text-left text-[11px] font-medium text-blue-700 dark:text-blue-300 transition-all hover:border-blue-300 hover:bg-blue-100/90 dark:hover:bg-blue-900/60 shadow-xs"
                             >
                               {suggestion}
                             </button>
@@ -1067,7 +1067,7 @@ export default function PortfolioChatbot() {
               ))}
               {showTypingIndicator && (
                 <div className="flex justify-start">
-                  <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-xs border border-slate-200 bg-white px-3 py-2 text-slate-400 shadow-xs">
+                  <div className="flex items-center gap-1.5 rounded-2xl rounded-tl-xs border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 px-3 py-2 text-slate-400 shadow-xs">
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-blue" />
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-green [animation-delay:120ms]" />
                     <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-accent-yellow [animation-delay:240ms]" />
@@ -1077,7 +1077,7 @@ export default function PortfolioChatbot() {
             </div>
 
             {/* Bottom Chat Input Bar */}
-            <div className="border-t border-slate-200 bg-white p-2.5">
+            <div className="border-t border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 p-2.5">
               {conversationClosed ? (
                 <button
                   type="button"

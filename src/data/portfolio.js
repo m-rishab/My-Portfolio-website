@@ -1,6 +1,6 @@
 export const profile = {
   name: 'Rishabh Mishra',
-  title: 'Data Scientist, AI Engineer & Data Analyst',
+  title: 'Data Analyst, AI & ML Engineer',
   email: 'rish.mishra130801@gmail.com',
   phone: '+91-9650411517',
   location: 'Faridabad, Haryana, India',
@@ -10,7 +10,7 @@ export const profile = {
     linkedin: 'https://www.linkedin.com/in/rishabhh-mishra/',
     github: 'https://github.com/m-rishab',
   },
-  roles: ['Data Scientist', 'Data Analyst', 'AI Engineer'],
+  roles: ['Data Analyst', 'ML Engineer', 'Applied AI'],
 };
 
 export const experience = [
@@ -35,13 +35,13 @@ export const experience = [
     period: 'Dec 2024 - Present',
     type: 'Full-time',
     summary:
-      'Work on AI performance analysis, evaluation workflows, SQL reporting, and stakeholder-ready insights.',
+      'I work on Google\'s search-evaluation program — grading how well AI answers perform, building automated quality checks, and turning findings into clear reports for clients and leadership.',
     highlights: [
-      'Engineered an automated AI response rating engine using semantic similarity and prompt engineering, achieving 90% precision across 5,000+ queries and reducing manual evaluation effort by 70%.',
-      'Created and maintained monthly performance dashboards to track and analyze key metrics across multiple AI evaluation projects, providing clear performance insights to project leads and clients.',
-      'Engineered a frontend-only data extraction pipeline using Python, HTTP requests, Regex, and JSON parsing to process 10,000+ Google AI Mode queries weekly, extracting clean AI Markdown responses, user queries, and multimodal metadata from embedded frontend payloads for at-scale AI quality evaluation.',
-      'Analyzed 3B+ weekly queries using Google\'s internal SQL-based PLX environment, extracting high-traffic query and entity data to prioritize the most impactful datasets for large-scale AI evaluation.',
-      'Led a 15-member team as POC, maintaining a 95% quality benchmark and presenting data-driven insights to leadership through structured storytelling.',
+      'Built an automated scoring system that rates how helpful AI answers are — it matched human reviewers 90% of the time across 5,000+ answers and cut manual review work by 70%.',
+      'Built a weekly extraction pipeline that automatically collects and cleans 10,000+ Google AI Mode answers, so the team no longer gathers them by hand.',
+      'Created monthly dashboards comparing Google AI Mode with ChatGPT and Perplexity — the main report used in client review meetings.',
+      'Designed an automated research workflow powered by AI with live Google search, cutting research turnaround from days to minutes.',
+      'Led a 15-person analyst team as the point of contact, holding a 95% quality benchmark and presenting insights to leadership.',
     ],
     tags: ['GoogleSQL', 'EDA', 'Dashboards', 'AI Evaluation'],
   },
@@ -62,12 +62,12 @@ export const experience = [
     period: 'May 2024 - Sept 2024',
     type: 'Internship',
     summary:
-      'Built applied AI prototypes across chatbots, retrieval, text-to-speech, and generative design workflows.',
+      'Built applied AI prototypes — voice assistants, document question-answering, and text-to-speech systems.',
     highlights: [
-      'Authored the prompt-driven conversation design — states, follow-up logic, and conditional function calls — powering an AI voice agent in Claude Workbench for scheduling, knowledge retrieval, call transfer, and call termination.',
-      'Implemented a Text-to-Speech system using FastAPI and CoquiTTS/Xttsv2, reducing latency by 30%.',
-      'Refined the voice agent\'s response quality post-launch through A/B testing — iterating on tone, phrasing, and conversational flow to increase user satisfaction by 40%.',
-      'Developed a PDF-based knowledge assistant using RAG, retrieving answers only from user-uploaded documents with 95% accuracy, and rejecting out-of-scope queries to prevent hallucinated responses.',
+      'Designed the conversation flow for an AI voice assistant — scheduling, answering from a knowledge base, and live call transfer — so calls felt natural and stayed on track.',
+      'Built a text-to-speech service for the assistant, cutting the voice response delay by 30%.',
+      'Ran A/B tests on the assistant\'s replies — small experiments in tone and phrasing that made interactions noticeably clearer.',
+      'Built a document-powered Q&A assistant that answers only from uploaded PDFs — right 95% of the time, and it refuses questions outside those documents instead of guessing.',
     ],
     tags: ['Claude', 'FastAPI', 'PostgreSQL', 'FAISS', 'GAN'],
   },
@@ -143,10 +143,10 @@ export const keyProjects = [
     title: 'AI Rating Engine',
     company: 'Google xWS via Highspring',
     category: 'Company Project',
-    problem: 'Manual evaluation of Generative AI responses was time-consuming and difficult to keep consistent across large query sets.',
+    problem: 'Checking thousands of AI answers by hand was slow, and different reviewers judged the same answer differently.',
     approach:
-      'Developed an automated AI response rating workflow using semantic similarity and prompt engineering, applying structured Helpfulness guidelines across user intent, clarity, factuality, and safety to support consistent response evaluation.',
-    outcome: 'Achieved 90% precision across 5,000+ queries, reducing manual evaluation effort by 70%.',
+      'Built an automated scoring workflow that rates each answer against clear guidelines — relevance to the question, clarity, accuracy, and safety — using prompt engineering and semantic similarity to keep scores consistent.',
+    outcome: 'Matched human reviewers 90% of the time across 5,000+ answers and cut manual evaluation effort by 70%.',
     tech: ['Python', 'Semantic Similarity', 'Prompt Engineering', 'Generative AI Evaluation'],
     processDoc: {
       title: 'AI Response Helpfulness Rating Engine',
@@ -205,10 +205,10 @@ export const keyProjects = [
     title: 'Google AI Mode Data Extraction & Evaluation',
     company: 'Google xWS via Highspring',
     category: 'Analytics',
-    problem: 'AI Mode responses with missing tables, cards, or images needed to be diagnosed at scale.',
+    problem: 'Google AI Mode answers sometimes come back missing tables, cards, or images — and the team needed a fast way to spot those gaps across thousands of links.',
     approach:
-      'Automated the extraction of AI Mode responses and multimodal metadata from 10,000+ weekly links, using Python, HTTP requests, Regex, JSON parsing, and Google Sheets-based input.',
-    outcome: 'Enabled scalable AI quality evaluation and provided actionable insights to the client on multimodality loss and response quality.',
+      'Built a Python pipeline that fetches each AI Mode link directly, then pulls out the answer and all its parts — text, tables, images, and citations — automatically, using simple HTTP requests instead of a browser.',
+    outcome: 'Processed 10,000+ AI Mode links every week and gave the team and client clear, weekly visibility into where answers were losing tables, cards, or images.',
     tech: ['Python', 'Google Sheets', 'HTTP Requests', 'Regex', 'JSON', 'GenAI Evaluation'],
     processDoc: {
       title: 'Architecture Summary',
@@ -271,10 +271,10 @@ export const keyProjects = [
     title: 'Knowledge Base Chatbot',
     company: 'TheFinansol',
     category: 'Generative AI',
-    problem: 'Customer support teams needed document-grounded answers from uploaded knowledge-base PDFs without hallucinations.',
+    problem: 'Support teams needed answers straight from company documents — and couldn\'t risk the AI making things up.',
     approach:
-      'Built a PDF-based RAG chatbot with chunking, embeddings, semantic retrieval, grounding prompts, and scope guardrails.',
-    outcome: 'Achieved 95% accuracy on grounded answers and reliably refused out-of-scope questions.',
+      'Built a chatbot that searches uploaded PDFs and answers only from what it finds in them — using retrieval-augmented generation (RAG) to keep every reply grounded in the source documents.',
+    outcome: 'Answers grounded in the documents were right 95% of the time — and it politely declined questions outside those documents instead of guessing.',
     tech: ['RAG', 'Claude Haiku', 'PostgreSQL', 'FAISS', 'Pandas', 'Semantic Search', 'Prompt Engineering'],
     processDoc: {
       title: 'PDF-Based Knowledge Base Chatbot',
@@ -337,7 +337,7 @@ export const personalProjects = [
     category: 'Machine Learning',
     problem: 'How can credit risk decisions become transparent, explainable, and adaptable to economic stress scenarios?',
     approach:
-      'Combined XGBoost for risk prediction with SHAP for explainability, economic stress testing for scenario analysis, and NVIDIA NIM-hosted Llama 3.1 for multilingual GenAI credit explanations in a real-time Flask + React application.',
+      'Predicts credit risk with an ML model, explains every decision in plain terms, stress-tests it against economic scenarios, and auto-writes credit reports in 3 languages.',
     outcome: 'Delivered an interactive platform that turns black-box credit scoring into auditable, multilingual insights with live scenario simulation.',
     tech: ['XGBoost', 'SHAP', 'Llama 3.1', 'Flask', 'React', 'NVIDIA NIM'],
     links: { github: 'https://github.com/m-rishab/Credit-Risk-StressLab', live: 'https://credit-risk-stresslab-production.up.railway.app' },
@@ -348,7 +348,7 @@ export const personalProjects = [
     category: 'Generative AI',
     problem: 'How can teams verify a dataset\'s license, provenance, and trustworthiness before building on it?',
     approach:
-      'Built a multi-agent pipeline using LangGraph that ingests Kaggle/HuggingFace dataset URLs, audits license and consent signals, traces citations with retraction checks, profiles data quality, and aggregates findings into an evidence-backed 0-100 trust score.',
+      'Runs five AI agents over a dataset — checking its license, quality, citations, and duplicates — and combines the evidence into a clear 0-100 trust score before you build on it.',
     outcome: 'Created a full-stack provenance watchdog with a live dashboard, CI-gate API, and real-time SSE progress streaming.',
     tech: ['FastAPI', 'LangGraph', 'NVIDIA Nemotron', 'React', 'Tailwind', 'SQLite'],
     links: { github: 'https://github.com/m-rishab/DataSentinal', live: 'https://dataasentinal.onrender.com' },
@@ -359,7 +359,7 @@ export const personalProjects = [
     category: 'Generative AI',
     problem: 'How can LLM API costs be reduced without sacrificing response quality for complex prompts?',
     approach:
-      'Developed a cost-aware routing system that scores every prompt for complexity in real time using heuristics (or an optional XGBoost model) and routes to the cheapest capable NVIDIA NIM model across tiered pricing bands, with full request telemetry logged to SQLite.',
+      'Measures how hard each prompt is, then routes it to the cheapest AI model that can still handle it well — cutting costs 50-87% on simple traffic without hurting quality on hard prompts.',
     outcome: 'Achieved 50-87% savings on simple traffic while maintaining quality on hard prompts, with a live streaming UI and savings dashboard.',
     tech: ['FastAPI', 'XGBoost', 'NVIDIA NIM', 'SSE', 'SQLite', 'Vanilla JS'],
     links: { github: 'https://github.com/m-rishab/ModelPilot', live: 'https://modelpilo-nv.up.railway.app' },
@@ -370,7 +370,7 @@ export const personalProjects = [
     category: 'Generative AI',
     problem: 'How can AI deliver personalized health and fitness plans that adapt to individual body metrics, dietary preferences, and regional constraints?',
     approach:
-      'Built a Streamlit app powered by Google Gemini Pro and LangChain that takes user inputs — age, gender, height, weight, region, dietary preference, allergies, and health conditions — and generates tailored diet and workout plans through structured prompt chains.',
+      'Takes your age, body metrics, dietary preferences, allergies, and health conditions — then generates a personalized diet and workout plan built around your routine and region.',
     outcome: 'Delivered a user-friendly interface producing actionable, personalized nutrition and fitness recommendations powered by GenAI.',
     tech: ['Google Gemini Pro', 'LangChain', 'Streamlit', 'Python'],
     links: { github: 'https://github.com/m-rishab/Diet-and-workout-Recommendation-using-Google-Gemini-pro', live: 'https://diet-and-workout-recommendation-using-app-gemini-pro.streamlit.app/' },
@@ -378,9 +378,8 @@ export const personalProjects = [
 ];
 
 export const navLinks = [
-  { label: 'About', href: '#about-story' },
-  { label: 'Experience', href: '#experience' },
   { label: 'Projects', href: '#projects' },
+  { label: 'Experience', href: '#experience' },
   { label: 'Now', href: '#now' },
   { label: 'Contact', href: '#contact' },
 ];
@@ -413,22 +412,22 @@ export const now = [
   {
     label: 'Current Role',
     title: 'Data Analyst — Google xWS via Highspring',
-    detail: 'AI performance analysis, automated evaluation workflows, and SQL reporting across large-scale query datasets.',
+    detail: 'Measuring how well Google\'s AI answers perform, building automated quality checks, and turning findings into simple dashboards and reports.',
   },
   {
     label: 'Currently Exploring',
     title: 'Multi-Agent AI Systems',
-    detail: 'Building autonomous pipelines with LangGraph and LLM orchestration for complex data workflows.',
+    detail: 'Learning how to get multiple AI agents to work together on multi-step data workflows without a human in the loop.',
   },
   {
     label: 'Building',
     title: 'AI Evaluation Tooling',
-    detail: 'Expanding automated scoring and extraction systems to handle multimodal GenAI outputs at scale.',
+    detail: 'Scaling up the tools that automatically score AI-generated answers and spot quality problems early.',
   },
   {
     label: 'Currently Learning',
-    title: 'Advanced RAG Architectures',
-    detail: 'Hybrid retrieval, reranking strategies, and grounding techniques for enterprise-grade LLM applications.',
+    title: 'Practical RAG',
+    detail: 'Improving how AI answers questions strictly from real documents — better retrieval, fewer made-up answers.',
   },
 ];
 
@@ -436,21 +435,21 @@ export const writing = [
   {
     date: '2026',
     title: 'Credit Risk StressLab',
-    description: 'How can credit risk decisions become transparent, explainable, and adaptable to economic stress scenarios?',
+    description: 'How can credit risk decisions stay transparent and explainable even as the economy shifts?',
     tech: ['XGBoost', 'SHAP', 'Llama 3.1', 'Flask', 'React', 'NVIDIA NIM'],
     link: 'https://github.com/m-rishab/Credit-Risk-StressLab',
   },
   {
     date: '2026',
     title: 'DataSentinel',
-    description: 'How can teams verify a dataset\'s license, provenance, and trustworthiness before building on it?',
+    description: 'How can you trust a dataset before you build on it?',
     tech: ['FastAPI', 'LangGraph', 'NVIDIA Nemotron', 'React', 'Tailwind', 'SQLite'],
     link: 'https://github.com/m-rishab/DataSentinal',
   },
   {
     date: '2026',
     title: 'ModelPilot',
-    description: 'How can LLM API costs be reduced without sacrificing response quality for complex prompts?',
+    description: 'How can AI costs drop without sacrificing answer quality?',
     tech: ['FastAPI', 'XGBoost', 'NVIDIA NIM', 'SSE', 'SQLite', 'Vanilla JS'],
     link: 'https://github.com/m-rishab/ModelPilot',
   },

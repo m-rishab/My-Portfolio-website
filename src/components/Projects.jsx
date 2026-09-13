@@ -1,266 +1,219 @@
-import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowUpRight, ExternalLink, FileText, Github, Layers3, Sparkles, Workflow } from 'lucide-react';
-import { forwardRef, useState, useMemo } from 'react';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
+import { ArrowRight, ArrowUpRight } from 'lucide-react';
 import { keyProjects, personalProjects } from '../data/portfolio';
-import { AnimatedSection } from './ui';
+import { SectionHeader } from './ui';
 import ProjectModal from './ProjectModal';
-import { tilt3d } from '../lib/animex';
+import { useState, useCallback } from 'react';
 
-const categoryAccents = {
-  'Generative AI':    { border: 'hover:border-amber-400/50', glow: 'hover:shadow-amber-950/20', dot: 'bg-amber-500' },
-  'Analytics':        { border: 'hover:border-emerald-400/50', glow: 'hover:shadow-emerald-950/20', dot: 'bg-emerald-500' },
-  'Machine Learning': { border: 'hover:border-rose-400/50', glow: 'hover:shadow-rose-950/20', dot: 'bg-rose-500' },
-  'Company Project':  { border: 'hover:border-blue-400/50', glow: 'hover:shadow-blue-950/20', dot: 'bg-blue-500' },
+const caseStudies = [
+  {
+    ...keyProjects[0],
+    stat: '90% precision · 5K+ queries · 70% effort cut',
+  },
+  {
+    ...keyProjects[1],
+    stat: '10K+ AI Mode links / week',
+  },
+  {
+    ...keyProjects[2],
+    stat: '95% grounded accuracy · hallucination guardrail',
+  },
+];
+
+const extraProjects = personalProjects.filter(
+  (p) => p.id !== 'diet-and-workout',
+);
+
+const chipColor = (cat) => {
+  const map = {
+    'Machine Learning': 'chip-blue',
+    'Generative AI': 'chip-violet',
+    'Analytics': 'chip-green',
+    'Company Project': 'chip-amber',
+  };
+  return map[cat] || 'chip-blue';
 };
 
-const ProjectCard = forwardRef(function ProjectCard({ project, index, onViewProcess }, ref) {
-  const accent = categoryAccents[project.category] || categoryAccents['Company Project'];
+function StackCard({ project, index, total, onOpen }) {
+  const wrapRef = useRef(null);
+  const cardRef = useRef(null);
+  const reduce = useReducedMotion();
+
+  const { scrollYProgress } = useScroll({
+    target: wrapRef,
+    offset: ['start end', 'start start'],
+  });
+  const scale = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.985, reduce ? 1 : 0.955]);
+  const dim = useTransform(scrollYProgress, [0, 0.7, 1], [1, 0.8, reduce ? 1 : 0.45]);
+
+  const onPointerMove = (e) => {
+    const card = cardRef.current;
+    if (!card) return;
+    const r = card.getBoundingClientRect();
+    card.style.setProperty('--spotlight-x', `${e.clientX - r.left}px`);
+    card.style.setProperty('--spotlight-y', `${e.clientY - r.top}px`);
+  };
+
+  const open = (e) => {
+    if (project.processDoc) {
+      onOpen(project);
+    } else {
+      e.preventDefault();
+      window.open(project.links?.github || project.links?.live, '_blank');
+    }
+  };
 
   return (
-    <motion.article
-      ref={ref}
-      layout
-      initial={{ opacity: 0, y: 24, scale: 0.96 }}
-      animate={{ opacity: 1, y: 0, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.94, y: 16 }}
-      transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1], delay: index * 0.05 }}
-      whileHover={{ y: -5, transition: { duration: 0.2, ease: 'easeOut' } }}
-      className={`glass group rounded-2xl p-4 sm:p-5 md:p-6 h-full flex flex-col hover:shadow-2xl transition-[border-color,box-shadow,transform] duration-300 ${accent.border} ${accent.glow}`}
+    <div
+      ref={wrapRef}
+      className="stack-card"
+      style={{ top: `calc(76px + ${index * 14}px)` }}
     >
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-3 sm:mb-3.5">
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-          <span className="px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-md text-[10px] sm:text-xs font-semibold border border-accent-blue/20 bg-accent-blue/10 text-accent">
-            {project.category}
-          </span>
-          {project.company && (
-            <span className="px-2.5 py-1 rounded-md text-xs font-medium border border-surface-border bg-surface-raised text-gray-700">
-              {project.company}
+      <motion.article
+        ref={cardRef}
+        onPointerMove={onPointerMove}
+        style={{ scale, filter: reduce ? undefined : `brightness(${dim})` }}
+        className="group relative grid cursor-pointer overflow-hidden rounded-[22px] bg-paper-card shadow-[0_24px_60px_-20px_rgba(0,0,0,0.5)] min-h-[420px]"
+        onClick={open}
+        role="button"
+        tabIndex={0}
+        data-cursor="OPEN"
+        onKeyDown={(e) => e.key === 'Enter' && open(e)}
+        aria-label={`Open case study: ${project.title}`}
+      >
+        {/* cursor spotlight overlay */}
+        <div className="cursor-spotlight pointer-events-none absolute inset-0 z-0" />
+
+        {/* giant outlined numeral */}
+        <span
+          className="pointer-events-none absolute -bottom-8 -right-2 z-0 select-none font-display text-[clamp(6rem,12vw,13rem)] font-extrabold leading-none text-transparent opacity-40"
+          style={{ WebkitTextStroke: '1.5px rgba(25, 24, 32, 0.1)' }}
+          aria-hidden="true"
+        >
+          {String(index + 1).padStart(2, '0')}
+        </span>
+
+        {/* content */}
+        <div className="relative z-10 flex flex-col p-7 sm:p-9 lg:p-12 lg:pr-40">
+          <div className="mb-6 flex items-center justify-between gap-4">
+            <span className="font-mono text-sm text-muted">
+              {String(index + 1).padStart(2, '0')}<span className="opacity-50">/{String(total).padStart(2, '0')}</span>
             </span>
-          )}
+            <span className={`rounded-full px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] ${chipColor(project.category)}`}>
+              {project.category}
+            </span>
+          </div>
+
+          <h3 className="font-display text-3xl sm:text-4xl lg:text-[2.75rem] font-extrabold leading-[1.02] tracking-[-0.02em] text-ink">
+            <span className="serif-accent font-normal normal-case text-[1.05em] text-[#2f5ce8]">{project.title.split(' ')[0]}</span>{' '}
+            {project.title.split(' ').slice(1).join(' ')}
+          </h3>
+
+          <p className="mt-5 max-w-2xl text-[15px] leading-relaxed text-body">
+            {project.problem}
+          </p>
+
+          <div className="mt-6 max-w-2xl rounded-xl border border-hairline bg-paper px-4 py-3.5">
+            <p className="font-mono text-sm font-medium text-ink">{project.stat}</p>
+          </div>
+
+          <div className="mt-6 flex flex-wrap gap-2">
+            {project.tech.slice(0, 6).map((t) => (
+              <span key={t} className="rounded-md bg-paper-alt px-2 py-1 font-mono text-[11px] text-muted">
+                {t}
+              </span>
+            ))}
+            {project.links?.live && (
+              <a
+                href={project.links.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                className="inline-flex items-center gap-1 rounded-md bg-[#2f5ce8]/10 px-2 py-1 font-mono text-[11px] text-[#2f5ce8] transition-colors hover:bg-[#2f5ce8]/15"
+                aria-label={`Live demo of ${project.title}`}
+              >
+                live <ArrowUpRight size={13} />
+              </a>
+            )}
+          </div>
+
+          <div className="mt-auto pt-8">
+            <span className="inline-flex items-center gap-2 font-semibold text-ink transition-colors group-hover:text-[#2f5ce8]">
+              {project.processDoc ? 'Read the case study' : 'View project'}
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1.5"
+                style={{ color: '#2f5ce8' }}
+              />
+            </span>
+          </div>
         </div>
-
-        {project.processDoc && (
-          <span className="inline-flex items-center gap-1 text-[11px] font-medium text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/80">
-            <Sparkles size={11} />
-            Architecture
-          </span>
-        )}
-      </div>
-
-      <h3 className="font-display text-lg sm:text-xl font-bold text-gray-900 mb-2.5 leading-snug">{project.title}</h3>
-
-      <p className="text-xs sm:text-sm leading-relaxed text-gray-800 line-clamp-3">{project.description || project.approach}</p>
-
-      <p className="mt-2.5 flex items-start gap-2 text-[11px] sm:text-xs text-emerald-700 leading-relaxed line-clamp-2">
-        <span className="mt-1 h-1.5 w-1.5 rounded-full bg-emerald-500 shrink-0" />
-        {project.outcome}
-      </p>
-
-      <div className="flex flex-wrap gap-1 sm:gap-1.5 mt-4 sm:mt-5 mb-4 sm:mb-5">
-        {project.tech.map((tech) => (
-          <span key={tech} className="px-1.5 sm:px-2 py-0.5 rounded-md text-[10px] sm:text-xs font-medium bg-surface-raised text-gray-700 border border-surface-border transition-colors duration-200 group-hover:border-accent-blue/20">
-            {tech}
-          </span>
-        ))}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2 sm:gap-3 pt-3 sm:pt-4 mt-auto border-t border-surface-border">
-        {/* View Process button for projects with processDoc */}
-        {project.processDoc && onViewProcess && (
-          <button
-            type="button"
-            onClick={() => onViewProcess(project)}
-            className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-accent text-white hover:bg-accent-light active:scale-95 transition-all shadow-xs"
-          >
-            <Workflow size={13} />
-            View Workflow & Architecture
-          </button>
-        )}
-        {project.links?.live && (
-          <a
-            href={project.links.live}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border border-surface-border bg-white text-gray-700 hover:text-accent hover:border-accent/40 transition-colors"
-          >
-            <ExternalLink size={13} />
-            Live Demo
-          </a>
-        )}
-        {project.links?.github && (
-          <a
-            href={project.links.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border border-surface-border bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-          >
-            <Github size={13} />
-            Code
-          </a>
-        )}
-        {project.links?.pdf && (
-          <a
-            href={project.links.pdf}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-lg border border-surface-border bg-white text-gray-700 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-          >
-            <FileText size={13} />
-            Report
-          </a>
-        )}
-      </div>
-    </motion.article>
+      </motion.article>
+    </div>
   );
-});
+}
 
 export default function ProjectsSection() {
   const [activeProject, setActiveProject] = useState(null);
-  const [activeTab, setActiveTab] = useState('all');
-
-  const tabs = [
-    { id: 'all', label: 'All Projects', count: keyProjects.length + personalProjects.length },
-    { id: 'work', label: 'Work Related', count: keyProjects.length },
-    { id: 'personal', label: 'Personal', count: personalProjects.length },
-  ];
-
-  const filteredKeyProjects = useMemo(() => {
-    if (activeTab === 'all' || activeTab === 'work') return keyProjects;
-    return [];
-  }, [activeTab]);
-
-  const filteredPersonalProjects = useMemo(() => {
-    if (activeTab === 'all' || activeTab === 'personal') return personalProjects;
-    return [];
-  }, [activeTab]);
-
-  const handleViewProcess = (project) => setActiveProject(project);
-  const handleCloseModal = () => setActiveProject(null);
+  const onOpen = useCallback((project) => setActiveProject(project), []);
+  const closeModal = useCallback(() => setActiveProject(null), []);
 
   return (
-    <>
-      <AnimatedSection id="projects" className="py-10 sm:py-12 md:py-16 bg-surface-raised/40" variant="slideRight">
-        <div className="max-w-6xl mx-auto px-4 sm:px-5">
-          <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 md:mb-10">
-            <div>
-              <p className="text-accent-light text-xs sm:text-sm font-semibold uppercase tracking-widest mb-2 sm:mb-3">Work</p>
-              <h2 className="font-display text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-3 sm:mb-4">Projects</h2>
-              <p className="text-gray-600 text-sm sm:text-base lg:text-lg max-w-2xl">
-                A curated selection of engineering & analytics projects across enterprise scale and applied GenAI.
-              </p>
-              <motion.div
-                initial={{ scaleX: 0, opacity: 0 }}
-                whileInView={{ scaleX: 1, opacity: 1 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.7, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-                className="section-reveal-line mt-4 sm:mt-6 h-1 w-16 rounded-full"
-              />
-            </div>
+    <section id="projects" className="relative bg-charcoal aurora-bg film-grain py-16 sm:py-20 md:py-28">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeader
+          dark
+          index="01"
+          tag="Selected Work"
+          title="Case studies"
+        />
 
-            <a
-              href="https://github.com/m-rishab"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex w-fit items-center gap-2 rounded-xl border border-surface-border bg-white px-3.5 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-semibold text-gray-800 hover:text-accent hover:border-accent/40 hover:bg-blue-50/50 shadow-xs transition-all"
-            >
-              <Layers3 size={16} />
-              More on GitHub
-              <ArrowUpRight size={15} />
-            </a>
-          </div>
-
-          {/* Category Filter Tabs */}
-          <div className="flex items-center gap-1.5 sm:gap-2 mb-8 sm:mb-10 p-1 sm:p-1.5 rounded-2xl border border-surface-border bg-white/90 backdrop-blur-md shadow-xs w-fit overflow-x-auto max-w-full">
-            {tabs.map((tab) => {
-              const isSelected = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`relative flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-[11px] sm:text-xs sm:text-sm font-semibold transition-all whitespace-nowrap ${
-                    isSelected
-                      ? 'text-white'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100/70'
-                  }`}
-                >
-                  {isSelected && (
-                    <motion.div
-                      layoutId="project-tab-pill"
-                      className="absolute inset-0 rounded-xl bg-accent shadow-sm"
-                      transition={{ type: 'spring', stiffness: 400, damping: 30 }}
-                    />
-                  )}
-                  <span className="relative z-10">{tab.label}</span>
-                  <span
-                    className={`relative z-10 px-1.5 py-0.5 rounded-full text-[11px] font-bold ${
-                      isSelected
-                        ? 'bg-white/20 text-white'
-                        : 'bg-slate-100 text-gray-500'
-                    }`}
-                  >
-                    {tab.count}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Key Projects Group */}
-          {filteredKeyProjects.length > 0 && (
-            <div className="mb-10 sm:mb-12 last:mb-0">
-              <div className="mb-4 sm:mb-5">
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-gray-900 mb-1.5">Enterprise & Key Work</h3>
-                <p className="text-gray-600 text-xs sm:text-sm max-w-2xl">Company-based work where I contributed to analytics, automation, and AI product workflows.</p>
-              </div>
-              <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                <AnimatePresence mode="popLayout">
-                  {filteredKeyProjects.map((project, i) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      index={i}
-                      onViewProcess={handleViewProcess}
-                    />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
-            </div>
-          )}
-
-          {/* Personal Projects Group */}
-          {filteredPersonalProjects.length > 0 && (
-            <div className="mb-10 sm:mb-12 last:mb-0">
-              <div className="mb-4 sm:mb-5">
-                <h3 className="font-display text-xl sm:text-2xl font-bold text-gray-900 mb-1.5">Personal Projects</h3>
-                <p className="text-gray-600 text-xs sm:text-sm max-w-2xl">Independent AI and data systems built end-to-end — from model training to live deployment.</p>
-              </div>
-              <motion.div layout className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-5">
-                <AnimatePresence mode="popLayout">
-                  {filteredPersonalProjects.map((project, i) => (
-                    <ProjectCard
-                      key={project.id}
-                      project={project}
-                      index={i}
-                      onViewProcess={handleViewProcess}
-                    />
-                  ))}
-                </AnimatePresence>
-              </motion.div>
-            </div>
-          )}
-
-          {filteredKeyProjects.length === 0 && filteredPersonalProjects.length === 0 && (
-            <div className="py-16 text-center">
-              <p className="text-gray-500">No projects found for this category.</p>
-            </div>
-          )}
+        <div className="flex flex-col gap-6 pb-[10vh]">
+          {caseStudies.map((project, i) => (
+            <StackCard
+              key={project.id}
+              project={project}
+              index={i}
+              total={caseStudies.length}
+              onOpen={onOpen}
+            />
+          ))}
         </div>
-      </AnimatedSection>
 
-      {activeProject && (
-        <ProjectModal project={activeProject} onClose={handleCloseModal} />
-      )}
-    </>
+        {/* More projects */}
+        <div className="mt-10 border-t border-white/10 pt-10">
+          <p className="mb-5 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-dark">
+            Projects
+          </p>
+          <div className="flex flex-col divide-y divide-white/10">
+            {extraProjects.map((p) => (
+              <a
+                key={p.id}
+                href={p.links?.github || p.links?.live}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center justify-between gap-4 py-5"
+              >
+                <div>
+                  <p className="font-display text-lg font-bold text-headline transition-colors group-hover:text-[#8fabf6]">
+                    {p.title}
+                  </p>
+                  <p className="text-sm text-muted-dark">{p.approach}</p>
+                </div>
+                <div className="flex shrink-0 items-center gap-3">
+                  <span className="hidden font-mono text-[10px] uppercase tracking-[0.14em] text-muted-dark sm:inline">
+                    {p.category}
+                  </span>
+                  <ArrowUpRight size={18} className="text-muted-dark transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 group-hover:text-[#8fabf6]" />
+                </div>
+              </a>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {activeProject && <ProjectModal project={activeProject} onClose={closeModal} />}
+    </section>
   );
 }

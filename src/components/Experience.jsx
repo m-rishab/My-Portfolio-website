@@ -1,137 +1,103 @@
-import { motion } from 'framer-motion';
-import { Calendar, ExternalLink, MapPin } from 'lucide-react';
-import { experience } from '../data/portfolio';
-import { AnimatedSection, SectionHeading } from './ui';
+import { experience, education } from '../data/portfolio';
+import { SectionHeader } from './ui';
+import { ExternalLink, GraduationCap } from 'lucide-react';
 
 export default function ExperienceSection() {
   return (
-    <AnimatedSection id="experience" className="py-10 sm:py-12 md:py-16" variant="slideLeft">
-      <div className="max-w-6xl mx-auto px-4 sm:px-5">
-        <SectionHeading
-          eyebrow="Career"
-          title="Experience"
-          subtitle="A quick look at the roles, tools, and work I have been closest to."
+    <section id="experience" className="relative bg-paper py-16 sm:py-20 md:py-28">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6">
+        <SectionHeader
+          index="02"
+          tag="Career"
+          title="Where the work happens"
+          accent="work"
         />
 
-        {/* Unified wide container */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-          className="glass rounded-2xl p-4 sm:p-6 md:p-8 lg:p-10 divide-y divide-surface-border/60"
-        >
+        <div className="flex flex-col divide-y divide-hairline">
           {experience.map((job, idx) => (
             <div
               key={job.id}
-              className={`grid lg:grid-cols-[300px_1fr] xl:grid-cols-[340px_1fr] gap-5 sm:gap-6 lg:gap-10 ${
-                idx === 0 ? 'pb-8 sm:pb-10' : 'pt-8 sm:pt-10'
-              }`}
+              className="group grid gap-6 py-10 transition-all duration-500 lg:grid-cols-[0.9fr_1.1fr] lg:py-12"
+              style={{ transform: 'translateX(0)' }}
             >
-              {/* Left Column: Company & Role Details */}
-              <div className="flex flex-col justify-start">
-                <div className="flex items-center gap-3 mb-3 sm:mb-4">
-                  {/* Logo Frame */}
-                  <span
-                    className={`grid shrink-0 place-items-center overflow-hidden rounded-xl border border-surface-border p-2 ${
-                      job.companyLogoFrameClassName || 'h-11 w-28'
-                    } ${job.companyLogoClassName || 'bg-white'}`}
-                  >
-                    {job.companyLogo ? (
-                      <motion.img
-                        src={job.companyLogo}
-                        alt={`${job.companyDisplay || job.company} logo`}
-                        className="h-full w-full object-contain"
-                        loading="lazy"
-                        initial={{ opacity: 0, scale: 0.95 }}
-                        whileInView={{ opacity: 1, scale: 1 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.35 }}
-                        onError={(e) => {
-                          e.currentTarget.style.display = 'none';
-                          e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                        }}
-                      />
-                    ) : null}
-                    <span className={`font-display text-base font-bold ${job.companyLogo ? 'hidden' : ''}`}>
-                      {(job.companyDisplay || job.company).slice(0, 1)}
-                    </span>
-                  </span>
-
-                  {/* Badge */}
-                  <span className="px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[10px] sm:text-[11px] font-semibold bg-accent-green/10 text-accent-green border border-accent-green/20">
-                    {job.type}
-                  </span>
-                </div>
-
-                {job.roles ? (
-                  <div className="mb-1.5 space-y-1">
-                    {job.roles.map((r) => (
-                      <div key={r.title} className="flex flex-wrap items-baseline gap-x-2">
-                        <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-gray-900 leading-tight">
-                          {r.title}
-                        </h3>
-                        <span className="text-[11px] sm:text-xs text-gray-500">{r.period}</span>
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <h3 className="font-display text-lg sm:text-xl md:text-2xl font-bold text-gray-900 leading-tight mb-1.5">
-                    {job.role}
-                  </h3>
-                )}
-
-                <div className="flex items-center gap-2 mb-2.5 sm:mb-3">
-                  <span className="text-xs sm:text-sm font-medium text-accent-light">
-                    {job.companyDisplay || job.company}
-                  </span>
-                  {job.companyWebsite && (
+              {/* Left — identity */}
+              <div className="flex items-start gap-4">
+                <span
+                  className={`grid h-[52px] w-[52px] shrink-0 place-items-center overflow-hidden rounded-[14px] border border-hairline ${job.companyLogoClassName || 'bg-paper-card'}`}
+                >
+                  {job.companyLogo ? (
+                    <img
+                      src={job.companyLogo}
+                      alt={`${job.companyDisplay || job.company} logo`}
+                      className="h-full w-full object-contain p-1.5"
+                      loading="lazy"
+                      onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                    />
+                  ) : (
+                    <span className="font-display font-bold text-ink">{(job.companyDisplay || job.company).slice(0, 1)}</span>
+                  )}
+                </span>
+                <div>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">
+                    {job.period}
+                  </p>
+                  <p className="mt-1.5 font-display text-xl font-bold text-ink">
+                    {job.role || job.roles?.[0]?.title}
+                  </p>
+                  <p className="mt-0.5 text-[15px] font-medium">
                     <a
                       href={job.companyWebsite}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-0.5 text-xs text-gray-400 hover:text-gray-900 transition-colors"
-                      title="Visit company website"
+                      className="inline-flex items-center gap-1 text-[#2950c4] underline decoration-transparent underline-offset-4 transition-colors hover:decoration-[#2950c4]"
                     >
-                      <ExternalLink size={12} />
+                      {job.companyDisplay || job.company}
+                      {job.companyWebsite && <ExternalLink size={12} className="opacity-50" />}
                     </a>
-                  )}
-                </div>
-
-                <div className="flex flex-wrap gap-x-3 sm:gap-x-4 gap-y-1.5 text-[11px] sm:text-xs text-gray-500">
-                  <span className="inline-flex items-center gap-1.5">
-                    <Calendar size={13} className="text-accent-blue/80" />
-                    {job.period}
-                  </span>
-                  <span className="inline-flex items-center gap-1.5">
-                    <MapPin size={13} className="text-accent-blue/80" />
-                    {job.location}
-                  </span>
+                  </p>
+                  <p className="mt-1.5 font-mono text-[10px] uppercase tracking-[0.14em] text-muted">
+                    {job.location} · {job.type}
+                    {job.roles?.[1] && <span> · incl. {job.roles[1].title} ({job.roles[1].period})</span>}
+                  </p>
                 </div>
               </div>
 
-              {/* Right Column: Clean Bullet Points */}
-              <div className="flex flex-col justify-center">
-                <ul className="space-y-3 sm:space-y-3.5">
-                  {job.highlights.map((point, i) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ duration: 0.35, delay: i * 0.05 }}
-                      className="flex items-start gap-2.5 sm:gap-3 text-xs sm:text-sm md:text-[14.5px] text-gray-700 leading-[1.7]"
-                    >
-                      <span className="mt-[7px] h-1.5 w-1.5 rounded-full bg-accent-blue shrink-0 shadow-sm shadow-blue-400/40" />
-                      <span>{point}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
+              {/* Right — highlights with dash bullets */}
+              <ul className="space-y-3.5">
+                {job.highlights.map((point, i) => (
+                  <li
+                    key={i}
+                    className="flex items-start gap-3 text-[15px] leading-[1.7] text-body"
+                    style={{ animationDelay: `${i * 80}ms` }}
+                  >
+                    <span className="mt-[0.6em] h-[2px] w-5 shrink-0 bg-gradient-to-r from-[#2f5ce8] to-[#7c5af0]" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
-        </motion.div>
+
+          {/* Education summary row */}
+          <div className="flex items-start gap-4 py-10 lg:py-12">
+            <span className="grid h-[52px] w-[52px] shrink-0 place-items-center rounded-[14px] border border-hairline bg-paper-card">
+              <GraduationCap size={22} className="text-[#2f5ce8]" />
+            </span>
+            <div>
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-muted">{education.period} · GPA {education.gpa}</p>
+              <p className="mt-1.5 font-display text-xl font-bold text-ink">{education.degree}</p>
+              <p className="mt-0.5 text-[15px] text-[#2950c4]">{education.school}</p>
+              <p className="mt-2.5 flex flex-wrap gap-2">
+                {education.courses.slice(0, 6).map((course) => (
+                  <span key={course} className="rounded-md border border-hairline bg-paper-alt px-2.5 py-1 font-mono text-[11px] text-muted">
+                    {course}
+                  </span>
+                ))}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </AnimatedSection>
+    </section>
   );
 }

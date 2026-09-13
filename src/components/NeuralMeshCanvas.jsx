@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 // Palette tailored for modern light-mode portfolio with Google / AI tech accents
 const NODE_COLORS = [
@@ -11,12 +11,31 @@ const NODE_COLORS = [
 
 export default function NeuralMeshCanvas() {
   const canvasRef = useRef(null);
+  const containerRef = useRef(null);
+  const [isVisible, setIsVisible] = useState(true);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { threshold: 0.01 }
+    );
+    observer.observe(container);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     let animId;
     let particles = [];
@@ -115,6 +134,12 @@ export default function NeuralMeshCanvas() {
 
     function render() {
       ctx.clearRect(0, 0, width, height);
+
+      // Respect reduced motion + visibility
+      if (reduceMotion || !isVisible) {
+        animId = requestAnimationFrame(render);
+        return;
+      }
 
       // 1. Draw subtle ambient cursor glow if active
       if (mouse.isActive) {
@@ -224,6 +249,13 @@ export default function NeuralMeshCanvas() {
         ctx.arc(mouse.x, mouse.y, 3, 0, Math.PI * 2);
         ctx.fillStyle = 'rgba(37, 99, 235, 0.7)';
         ctx.fill();
+      }
+
+      if (!reduceMotion) {
+        if (!isVisible) {
+          animId = requestAnimationFrame(render);
+          return;
+        }
       }
 
       animId = requestAnimationFrame(render);

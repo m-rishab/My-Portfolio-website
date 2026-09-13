@@ -21,10 +21,10 @@ export default function NowSection() {
                 <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-accent mb-1">
                   {item.label}
                 </p>
-                <h3 className="font-display text-sm sm:text-base font-bold text-gray-900 mb-1 leading-snug">
+                <h3 className="font-display text-sm sm:text-base font-bold text-gray-900 dark:text-white mb-1 leading-snug">
                   {item.title}
                 </h3>
-                <p className="text-gray-700 text-xs sm:text-sm leading-relaxed">{item.detail}</p>
+                <p className="text-gray-700 dark:text-slate-300 text-xs sm:text-sm leading-relaxed">{item.detail}</p>
               </div>
             </StaggerItem>
           ))}

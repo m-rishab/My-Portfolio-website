@@ -1,142 +1,132 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { Send, Linkedin, Mail, Phone } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Linkedin, Github, Check, Copy } from 'lucide-react';
 import { profile } from '../data/portfolio';
-import { AnimatedSection, SectionHeading } from './ui';
-import CopyEmailButton from './CopyEmailButton';
+import { useTheme } from '../context/ThemeContext';
+import { magnetic } from '../lib/animex';
+import { SplitText } from './ui';
 
 export default function ContactSection() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
-  const [status, setStatus] = useState('');
+  const [copied, setCopied] = useState(false);
+  const orbWrapRef = useRef(null);
+  const orbRef = useRef(null);
+  const { reduceMotion, showToast } = useTheme();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    const body = encodeURIComponent(
-      `Name: ${form.name}\nEmail: ${form.email}\n\n${form.message}`,
-    );
-    window.location.href = `mailto:${profile.email}?subject=${encodeURIComponent(form.subject)}&body=${body}`;
-    setStatus('Opening your email client…');
-    setTimeout(() => setStatus(''), 4000);
+  useEffect(() => {
+    if (reduceMotion) return undefined;
+    return magnetic(orbWrapRef.current, { strength: 0.3 });
+  }, [reduceMotion]);
+
+  const copyEmail = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+      setCopied(true);
+      showToast('Email copied to clipboard');
+      setTimeout(() => setCopied(false), 2400);
+    } catch {
+      showToast('Could not copy — use your email client');
+    }
   };
 
   return (
-    <AnimatedSection id="contact" className="py-10 sm:py-12 md:py-16">
-      <div className="max-w-6xl mx-auto px-4 sm:px-5">
-        <SectionHeading
-          eyebrow="Connect"
-          title="Contact Me"
-          subtitle="Have a project in mind or want to collaborate? I'd love to hear from you."
-        />
+    <section id="contact" className="relative overflow-hidden bg-charcoal aurora-bg film-grain py-24 sm:py-32 md:py-40">
+      <div className="relative z-10 mx-auto max-w-6xl px-4 sm:px-6">
+        <div className="mb-8 flex items-center gap-4">
+          <span className="font-mono text-xs text-[#8fabf6]">04</span>
+          <span className="section-tag text-muted-dark">Contact</span>
+          <span className="h-px flex-1" style={{ background: 'linear-gradient(to right, rgba(255,255,255,0.12), transparent)' }} />
+        </div>
 
-        <div className="grid lg:grid-cols-5 gap-6 sm:gap-8">
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="lg:col-span-2 space-y-4 sm:space-y-5"
-          >
-            {/* Email Card with Copy Button */}
-            <div className="flex items-center justify-between glass rounded-2xl p-4 sm:p-5 hover:border-accent/30 transition-colors group">
-              <a href={`mailto:${profile.email}`} className="flex items-center gap-3 sm:gap-4 min-w-0">
-                <span className="p-2.5 sm:p-3 rounded-xl bg-accent/10 text-accent-light group-hover:scale-110 transition-transform shrink-0">
-                  <Mail size={20} />
-                </span>
-                <div className="min-w-0">
-                  <p className="text-[10px] sm:text-xs text-gray-900 uppercase tracking-wide">Email</p>
-                  <p className="text-gray-900 text-xs sm:text-sm truncate">{profile.email}</p>
-                </div>
-              </a>
-              <CopyEmailButton />
-            </div>
+        <h2 className="heading-skew heading-dark font-display font-extrabold uppercase leading-[0.9] tracking-[-0.04em] text-[clamp(2.75rem,9vw,8rem)] text-headline">
+          <SplitText text="Let's build something" accent="something" />
+        </h2>
 
-            {/* Phone Card */}
-            <a
-              href={`tel:${profile.phone}`}
-              className="flex items-center gap-3 sm:gap-4 glass rounded-2xl p-4 sm:p-5 hover:border-accent/30 transition-colors group"
-            >
-              <span className="p-2.5 sm:p-3 rounded-xl bg-accent/10 text-accent-light group-hover:scale-110 transition-transform">
-                <Phone size={20} />
-              </span>
-              <div>
-                <p className="text-[10px] sm:text-xs text-gray-900 uppercase tracking-wide">Phone</p>
-                <p className="text-gray-900 text-xs sm:text-sm">{profile.phone}</p>
-              </div>
-            </a>
-
-            <a
-              href={profile.social.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-3 sm:gap-4 glass rounded-2xl p-4 sm:p-5 hover:border-accent/30 transition-colors group"
-            >
-              <span className="p-2.5 sm:p-3 rounded-xl bg-accent/10 text-accent-light group-hover:scale-110 transition-transform">
-                <Linkedin size={20} />
-              </span>
-              <div>
-                <p className="text-[10px] sm:text-xs text-gray-900 uppercase tracking-wide">LinkedIn</p>
-                <p className="text-gray-900 text-xs sm:text-sm">Connect professionally</p>
-              </div>
-            </a>
-          </motion.div>
-
-          <motion.form
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            onSubmit={handleSubmit}
-            className="lg:col-span-3 glass rounded-2xl sm:rounded-3xl p-5 sm:p-6 md:p-8 space-y-4 sm:space-y-5"
-          >
-            <h3 className="font-display text-lg sm:text-xl font-semibold text-gray-900 mb-2">Send a Message</h3>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
-              <input
-                type="text"
-                required
-                placeholder="Your Name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-sm"
-              />
-              <input
-                type="email"
-                required
-                placeholder="Email Address"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-sm"
-              />
-            </div>
-
-            <input
-              type="text"
-              required
-              placeholder="Subject"
-              value={form.subject}
-              onChange={(e) => setForm({ ...form, subject: e.target.value })}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all text-sm"
-            />
-
-            <textarea
-              required
-              rows={4}
-              placeholder="Your message..."
-              value={form.message}
-              onChange={(e) => setForm({ ...form, message: e.target.value })}
-              className="w-full px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl bg-white border border-surface-border text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-accent/30 focus:border-accent transition-all resize-none text-sm"
-            />
-
-            {status && <p className="text-xs sm:text-sm text-accent">{status}</p>}
-
+        <div className="mt-12 flex flex-col items-start gap-10 lg:flex-row lg:items-center lg:gap-16">
+          {/* email + socials */}
+          <div>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-dark mb-3">
+              The fastest way to reach me
+            </p>
             <button
-              type="submit"
-              className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-accent hover:bg-accent-light text-white text-sm sm:text-base font-medium transition-all hover:scale-105"
+              type="button"
+              onClick={copyEmail}
+              className="group inline-flex items-center gap-3 font-mono text-[clamp(1.05rem,3.4vw,1.75rem)] text-headline underline decoration-[rgba(139,171,246,0.5)] decoration-2 underline-offset-8 transition-colors hover:decoration-[#8fabf6]"
             >
-              <Send size={18} />
-              Send Message
+              {copied ? "copied ✓" : "say hello"}
+              <span className="text-sm font-sans text-muted-dark">@</span>
             </button>
-          </motion.form>
+
+            <div className="mt-8 flex items-center gap-3">
+              <a
+                href={profile.social.linkedin}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 text-muted-dark transition-all hover:border-white/30 hover:text-headline"
+              >
+                <Linkedin size={17} />
+              </a>
+              <a
+                href={profile.social.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="GitHub"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 text-muted-dark transition-all hover:border-white/30 hover:text-headline"
+              >
+                <Github size={17} />
+              </a>
+              <button
+                type="button"
+                onClick={copyEmail}
+                aria-label="Copy email"
+                className="group flex h-11 w-11 items-center justify-center rounded-full border border-white/12 text-muted-dark transition-all hover:border-white/30 hover:text-headline"
+              >
+                {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={15} />}
+              </button>
+            </div>
+          </div>
+
+          {/* Rotating circular button */}
+          <div ref={orbWrapRef} className="magnetic-btn self-center lg:ml-auto">
+            <button
+              ref={orbRef}
+              type="button"
+              onClick={() => (window.location.href = `mailto:${profile.email}`)}
+              aria-label="Say hello"
+              className="orb-btn group relative mx-auto grid h-36 w-36 place-items-center rounded-full transition-all duration-300"
+            >
+              <svg viewBox="0 0 100 100" className="rotate-text absolute inset-0 h-full w-full" aria-hidden="true">
+                <defs>
+                  <path id="circ-path" d="M 50,50 m -37,0 a 37,37 0 1,1 74,0 a 37,37 0 1,1 -74,0" />
+                </defs>
+                <text className="orb-text fill-current font-mono text-[8.2px] tracking-[0.3em] text-headline group-hover:text-white">
+                  <textPath href="#circ-path">OPEN TO WORK · SAY HELLO ·</textPath>
+                </text>
+              </svg>
+              <span className="relative flex h-12 w-12 items-center justify-center rounded-full iris-gradient text-white shadow-lg shadow-[#2f5ce8]/30 transition-transform duration-300 group-hover:scale-110">
+                <Copy size={16} />
+              </span>
+            </button>
+          </div>
         </div>
       </div>
-    </AnimatedSection>
+
+      {/* Giant reverse outline marquee */}
+      <div className="marquee-skew relative z-10 mt-20 overflow-hidden select-none border-t border-white/10 pt-8" aria-hidden="true">
+        <div className="flex whitespace-nowrap w-max marquee-scroll" style={{ animationDirection: 'reverse' }}>
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex items-center">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="flex items-center font-display font-extrabold uppercase text-6xl sm:text-7xl md:text-8xl tracking-[-0.03em]">
+                  <span className="px-6 text-transparent" style={{ WebkitTextStroke: '1.5px rgba(243,242,238,0.25)' }}>
+                    Let's work together
+                  </span>
+                  <span className="text-2xl sm:text-4xl iris-gradient-text">✦</span>
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }

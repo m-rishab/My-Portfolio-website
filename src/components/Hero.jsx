@@ -1,22 +1,40 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowDown, Github, Linkedin, Mail, Sparkles } from 'lucide-react';
-import { profile, education } from '../data/portfolio';
+import { Github, Linkedin, ArrowDown } from 'lucide-react';
+import { profile } from '../data/portfolio';
 import profilePhoto from '../../assets/img/Rishab-new.webp';
-import CopyEmailButton from './CopyEmailButton';
-import { heroTimeline, tilt3d, magnetic } from '../lib/animex';
+import { magnetic } from '../lib/animex';
+import { useTheme } from '../context/ThemeContext';
 
-const roleColorClasses = ['hero-role-yellow', 'hero-role-green', 'hero-role-blue'];
+const techKeywords = [
+  'AI EVALUATION', 'RAG SYSTEMS', 'GOOGLE SQL', 'DASHBOARDS',
+  'PROMPT ENGINEERING', 'GENAI', 'PYTHON', 'BILLION-SCALE QUERIES', 'LLMS', 'DATA PIPELINES',
+];
+
+function useISTClock() {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const id = setInterval(() => setNow(new Date()), 1000);
+    return () => clearInterval(id);
+  }, []);
+  const time = new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kolkata',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: false,
+  }).format(now);
+  return time;
+}
 
 function TypingRoles() {
   const roles = profile.roles;
   const [index, setIndex] = useState(0);
   const [text, setText] = useState('');
   const [deleting, setDeleting] = useState(false);
-  const shouldReduceMotion = useReducedMotion();
+  const { reduceMotion } = useTheme();
 
   useEffect(() => {
-    if (shouldReduceMotion) {
+    if (reduceMotion) {
       setText(roles[0]);
       return undefined;
     }
@@ -24,206 +42,193 @@ function TypingRoles() {
     const current = roles[index];
     const isComplete = !deleting && text === current;
     const isCleared = deleting && text === '';
-    const delay = isComplete ? 1350 : deleting ? 38 : 70;
+    const delay = isComplete ? 1400 : deleting ? 38 : 70;
 
     const timeout = setTimeout(() => {
-      if (isComplete) {
-        setDeleting(true);
-        return;
-      }
-
-      if (isCleared) {
-        setDeleting(false);
-        setIndex((i) => (i + 1) % roles.length);
-        return;
-      }
-
+      if (isComplete) { setDeleting(true); return; }
+      if (isCleared) { setDeleting(false); setIndex((i) => (i + 1) % roles.length); return; }
       const nextLength = deleting ? text.length - 1 : text.length + 1;
       setText(current.slice(0, nextLength));
     }, delay);
 
     return () => clearTimeout(timeout);
-  }, [text, deleting, index, roles, shouldReduceMotion]);
+  }, [text, deleting, index, roles, reduceMotion]);
 
   return (
-    <span
-      className={`hero-role-text inline-flex min-w-[15ch] items-center font-display font-semibold ${roleColorClasses[index % roleColorClasses.length]}`}
-      aria-label={text || roles[index]}
-    >
-      {text}
-      {!shouldReduceMotion && <span className="ml-0.5 typing-caret" aria-hidden="true" />}
+    <span className="inline-flex items-baseline gap-2 font-mono text-sm sm:text-base text-muted-dark" aria-label={text || roles[index]}>
+      <span className="text-[#8fabf6] mr-1">$</span>
+      <span>{text}</span>
+      {!reduceMotion && <span className="typing-caret inline-block bg-[#8fabf6]" aria-hidden="true" />}
     </span>
   );
 }
 
-export default function Hero() {
-  const socials = [
-    { icon: Linkedin, href: profile.social.linkedin, label: 'LinkedIn' },
-    { icon: Github, href: profile.social.github, label: 'GitHub' },
-  ];
+function MaskedLine({ children, delay = 0, ready, className = '' }) {
+  const shouldAnimate = ready;
+  return (
+    <span className="block overflow-hidden">
+      <span
+        className={`block ${className} transition-transform duration-[900ms] ease-[cubic-bezier(.76,0,.24,1)] ${
+          shouldAnimate ? 'translate-y-0' : 'translate-y-[115%]'
+        }`}
+        style={{ transitionDelay: `${delay}ms` }}
+      >
+        {children}
+      </span>
+    </span>
+  );
+}
 
-  const badgeRef = useRef(null);
-  const nameRef = useRef(null);
-  const rolesRef = useRef(null);
-  const subtitleRef = useRef(null);
-  const ctaRef = useRef(null);
+export default function Hero({ ready }) {
+  const { reduceMotion } = useTheme();
+  const istTime = useISTClock();
+  const primaryRef = useRef(null);
+  const circularRef = useRef(null);
   const socialsRef = useRef(null);
-  const cardRef = useRef(null);
-  const cardInnerRef = useRef(null);
-  const shouldReduce = useReducedMotion();
+  const imageChipRef = useRef(null);
 
   useEffect(() => {
-    if (shouldReduce) return undefined;
-    const cleanup = tilt3d(cardInnerRef.current, { max: 7 });
-    const cleanupMag = magnetic(badgeRef.current, { strength: 0.2 });
+    if (reduceMotion) return undefined;
+    const cleanups = [
+      magnetic(primaryRef.current, { strength: 0.22 }),
+      magnetic(circularRef.current, { strength: 0.18 }),
+    ];
+    return () => cleanups.forEach((c) => c?.());
+  }, [reduceMotion]);
 
-    const tl = heroTimeline({
-      badge: badgeRef.current,
-      name: nameRef.current,
-      roles: rolesRef.current,
-      subtitle: subtitleRef.current,
-      cta: ctaRef.current,
-      socials: socialsRef.current,
-      card: cardRef.current,
-    });
-
-    return () => {
-      cleanup();
-      cleanupMag();
-      tl.pause();
-    };
-  }, [shouldReduce]);
+  const masksReady = ready || reduceMotion;
 
   return (
-    <section id="about" className="relative flex items-center pt-16 sm:pt-20 pb-8 sm:pb-10 overflow-hidden">
-      <div className="absolute inset-0 -z-10 bg-[linear-gradient(135deg,rgba(37,99,235,0.06),transparent_34%),linear-gradient(315deg,rgba(21,128,61,0.05),transparent_30%),linear-gradient(25deg,rgba(220,38,38,0.04),transparent_28%)]" />
-      <div className="absolute inset-0 -z-10 grid-pulse" />
-      <div className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_60%_50%_at_50%_40%,rgba(37,99,235,0.04),transparent)]" />
-
-      <div className="max-w-6xl mx-auto px-4 sm:px-5 w-full">
-        <div className="grid lg:grid-cols-[1.1fr_0.9fr] gap-8 sm:gap-10 lg:gap-14 items-center">
-          <div>
-            <p
-              ref={badgeRef}
-              className="inline-flex items-center gap-2 rounded-full border border-primary/25 bg-primary/10 px-3 py-1 text-xs sm:text-sm text-primary mb-4 sm:mb-5"
+    <section
+      id="about"
+      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-charcoal film-grain aurora-bg"
+    >
+      <div className="relative z-10 w-full px-4 sm:px-8 lg:px-12 pt-28 sm:pt-32 pb-40">
+        {/* Giant name */}
+        <h1 className="font-display font-extrabold uppercase text-[clamp(2.75rem,9.5vw,8rem)] leading-[0.92] tracking-[-0.035em] text-headline">
+          <MaskedLine delay={0} ready={masksReady}>Rishabh</MaskedLine>
+          <MaskedLine delay={130} ready={masksReady}>
+            <span className="text-outline" style={{ WebkitTextStrokeColor: 'rgba(243,242,238,0.4)' }}>
+              Mishra
+            </span>
+            <span
+              ref={imageChipRef}
+              className="inline-block align-middle overflow-hidden rounded-2xl border-2 border-white/15 ml-3 sm:ml-5 -translate-y-[0.08em]"
+              style={{ width: '0.62em', height: '0.62em' }}
             >
-              <Sparkles size={15} />
-              AI Engineer · Google Search Evaluation
-            </p>
+              <img
+                src={profilePhoto}
+                alt="Rishabh Mishra portrait"
+                className="h-full w-full object-cover"
+                style={{ objectPosition: '50% 18%' }}
+                loading="eager"
+              />
+            </span>
+          </MaskedLine>
+        </h1>
 
-            <h1
-              ref={nameRef}
-              className="font-display text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-bold text-gray-900 leading-tight mb-4 sm:mb-5"
-            >
-              {profile.name}
-            </h1>
-
-            <div
-              ref={rolesRef}
-              className="text-lg sm:text-xl md:text-2xl text-gray-500 mb-4 sm:mb-5 min-h-8 sm:min-h-9"
-            >
-              <TypingRoles />
-            </div>
-
-            <p
-              ref={subtitleRef}
-              className="text-base sm:text-lg text-gray-600 mb-6 sm:mb-8 max-w-2xl leading-relaxed"
-            >
-              I analyze billions of search queries to build automated evaluation systems for large language models at Google scale.
-            </p>
-
-            <div
-              ref={ctaRef}
-              className="flex flex-wrap items-center gap-2.5 sm:gap-3 mb-6 sm:mb-8"
-            >
-              <a
-                href="#projects"
-                className="px-4 sm:px-5 py-2.5 sm:py-3 rounded-lg bg-primary hover:bg-primary-light active:scale-[0.98] text-sm sm:text-base text-white font-semibold transition-all hover:-translate-y-0.5 shadow-lg shadow-primary/20"
-              >
-                View Projects
-              </a>
-            </div>
-
-            <div
-              ref={socialsRef}
-              className="flex flex-wrap items-center gap-2.5 sm:gap-3"
-            >
-              {socials.map(({ icon: Icon, href, label }) => (
-                <a
-                  key={label}
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                  className="p-2.5 sm:p-3 rounded-lg glass text-gray-500 hover:text-gray-900 hover:border-accent-blue/50 transition-all hover:-translate-y-1"
-                >
-                  <Icon size={20} />
-                </a>
-              ))}
-              <div className="inline-flex items-center gap-2 rounded-xl glass px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm text-gray-600 min-w-0">
-                <a href={`mailto:${profile.email}`} className="inline-flex items-center gap-1.5 hover:text-gray-900 transition-colors min-w-0">
-                  <Mail size={16} className="text-accent shrink-0" />
-                  <span className="font-medium text-gray-800 truncate">{profile.email}</span>
-                </a>
-                <CopyEmailButton />
-              </div>
-            </div>
-          </div>
-
-          <div
-            ref={cardRef}
-            className="glass rounded-2xl p-5 sm:p-6 md:p-7"
-          >
-            <div className="flex items-center justify-between gap-3 sm:gap-4 mb-5 sm:mb-6">
-              <div className="min-w-0">
-                <p className="text-[10px] sm:text-xs text-gray-900 uppercase tracking-widest mb-1">About me</p>
-                <h2 className="font-display text-xl sm:text-2xl font-bold text-gray-900">Nice to meet you</h2>
-              </div>
-              <div
-                ref={cardInnerRef}
-                className="relative shrink-0"
-                style={{ transformStyle: 'preserve-3d' }}
-              >
-                <motion.span
-                  className="pointer-events-none absolute inset-[-6px] rounded-[20px] border border-accent-blue/20"
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 12, repeat: Infinity, ease: 'linear' }}
-                />
-                <motion.span
-                  className="pointer-events-none absolute inset-[-12px] rounded-[24px] border border-accent-green/10"
-                  animate={{ rotate: -360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: 'linear' }}
-                />
-                <div className="absolute inset-0 rounded-2xl bg-accent-blue/20 blur-xl" />
-                <img
-                  src={profilePhoto}
-                  fetchpriority="high"
-                  alt="Rishabh Mishra, AI Engineer at Google specializing in search evaluation and automated LLM testing"
-                  className="relative h-20 w-20 sm:h-24 sm:w-24 md:h-28 md:w-28 lg:h-32 lg:w-32 rounded-2xl border border-accent-blue/25 bg-surface object-cover shadow-2xl shadow-gray-300/60 neon-pulse"
-                  style={{ objectPosition: '50% 15%' }}
-                />
-              </div>
-            </div>
-
-            <div className="rounded-xl border border-surface-border bg-surface-raised/50 p-3 sm:p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-widest text-gray-900">Education</span>
-              </div>
-              <p className="text-gray-900 text-xs sm:text-sm font-medium leading-snug">{education.degree}</p>
-              <p className="text-accent text-[11px] sm:text-xs mt-0.5">{education.school}</p>
-              <p className="text-gray-900 text-[11px] sm:text-xs mt-0.5">{education.period} · GPA: {education.gpa}</p>
-            </div>
-          </div>
+        {/* Availability + location / clock row — below the name */}
+        <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+          <span className="inline-flex items-center gap-2.5 rounded-full border border-white/10 bg-white/[0.04] py-1.5 pl-3 pr-4">
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            <span className="font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-headline">
+              Available for work
+            </span>
+          </span>
+          <span className="inline-flex items-center gap-3 font-mono text-[10px] sm:text-xs uppercase tracking-[0.2em] text-muted-dark">
+            <span>{profile.location}</span>
+            <span className="h-1 w-1 rounded-full bg-white/20" />
+            <span className="tabular-nums text-headline">{istTime} IST</span>
+          </span>
         </div>
 
-        <a
-          href="#experience"
-          className="absolute bottom-6 sm:bottom-7 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center gap-2 text-gray-500 hover:text-accent-light transition-colors"
-          aria-label="Scroll to experience"
-        >
-          <span className="text-xs uppercase tracking-widest">Scroll</span>
-          <ArrowDown size={20} className="animate-bounce" />
-        </a>
+        {/* Lede + typing row */}
+        <div className="mt-8 sm:mt-10 grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-end">
+          <MaskedLine delay={320} ready={masksReady}>
+            <p className="max-w-xl text-base sm:text-lg leading-relaxed text-muted-dark">
+              I analyze <span className="serif-accent text-[1.05em] text-[#8fabf6]">billions</span> of search queries,
+              build automated{' '}
+              <span className="serif-accent text-[1.05em] text-[#8fabf6]">evaluation</span>{' '}
+              systems for AI answers, and turn raw data into insights teams actually trust.
+            </p>
+          </MaskedLine>
+          <MaskedLine delay={420} ready={masksReady}>
+            <TypingRoles />
+          </MaskedLine>
+        </div>
+
+        {/* CTA row */}
+        <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-3 sm:gap-4">
+          <a
+            ref={primaryRef}
+            href="#projects"
+            className="shine-sweep magnetic-btn group inline-flex items-center gap-2 rounded-full iris-gradient px-6 sm:px-7 py-3 sm:py-3.5 text-sm sm:text-base font-semibold text-white shadow-lg shadow-[#2f5ce8]/25"
+          >
+            View Case Studies
+            <ArrowDown size={16} className="transition-transform duration-300 group-hover:translate-y-0.5" />
+          </a>
+          <a
+            ref={circularRef}
+            href="#contact"
+            className="magnetic-btn inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.03] px-6 sm:px-7 py-3 sm:py-3.5 text-sm sm:text-base font-medium text-headline transition-colors hover:border-white/30"
+          >
+            Get in touch
+          </a>
+          <div ref={socialsRef} className="ml-1 flex items-center gap-2">
+            <a
+              href={profile.social.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-muted-dark transition-all hover:border-white/30 hover:text-headline"
+            >
+              <Linkedin size={16} />
+            </a>
+            <a
+              href={profile.social.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="GitHub"
+              className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 bg-white/[0.03] text-muted-dark transition-all hover:border-white/30 hover:text-headline"
+            >
+              <Github size={16} />
+            </a>
+          </div>
+        </div>
+      </div>
+
+      {/* Vertical SCROLL cue */}
+      <a
+        href="#marquee"
+        className="group absolute right-6 sm:right-10 bottom-36 z-10 hidden lg:flex flex-col items-center gap-3"
+        aria-label="Scroll to see more"
+      >
+        <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-muted-dark [writing-mode:vertical-lr] transition-colors group-hover:text-headline">
+          Scroll
+        </span>
+        <span className="h-10 w-px bg-white/15 overflow-hidden relative">
+          <span className="absolute top-0 left-0 h-4 w-px bg-[#8fabf6] animate-[scrollcue_2.2s_ease-in-out_infinite]" />
+        </span>
+        <style>{`@keyframes scrollcue { 0% { transform: translateY(-16px);} 100% { transform: translateY(44px);} }`}</style>
+      </a>
+
+      {/* Bottom tech keywords marquee — iris gradient band */}
+      <div className="marquee-band absolute bottom-0 inset-x-0 z-10 overflow-hidden select-none" aria-hidden="true">
+        <div className="flex whitespace-nowrap w-max marquee-scroll marquee-motion">
+          {[0, 1].map((dup) => (
+            <div key={dup} className="flex items-center">
+              {techKeywords.map((k) => (
+                <span key={k} className="marquee-band-text inline-flex items-center font-mono text-xs sm:text-sm uppercase tracking-[0.18em] py-3.5 px-6">
+                  {k}
+                  <span className="ml-12 text-white/40">•</span>
+                </span>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
     </section>
   );
